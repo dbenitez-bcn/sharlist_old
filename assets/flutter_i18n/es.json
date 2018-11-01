@@ -1,4 +1,12 @@
 {
   "language":"español",
-  "appName":"Onlist"
+  "appName":"Onlist",
+  "title": "Test aplicacion",
+  "label":{
+    "main": "Hola {user}!"
+  },
+  "button":{
+    "clickMe": "Pulsame"
+  },
+  "toastMessage": "has pulsado el boton!"
 }
