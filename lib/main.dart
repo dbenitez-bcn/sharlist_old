@@ -3,7 +3,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:on_list/tutorial/tutorial.dart';
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Onlist',
       theme: new ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.pink,
       ),
       home: _myHome(context),
       localizationsDelegates: [
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             if (!snapshot.hasError) {
         return snapshot.data.getBool("welcome") != null
         ? new Text("Second Time")
-            : Text("First Time");
+            : Tutorial();
         } else {
         return new Text("Error :(");
         }
