@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:on_list/createLoad/createLoadList.dart';
 import 'package:on_list/model/tutorialModel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -134,7 +133,7 @@ class EmpezarApp extends StatelessWidget {
           color: Colors.white,
           child: Text("To app", style: TextStyle(color: Colors.pinkAccent),),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateLoad()));
+            Navigator.pushReplacementNamed(context, '/createLoad');
           }),
     );
   }

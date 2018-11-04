@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:on_list/createLoad/createLoadList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:on_list/tutorial/tutorial.dart';
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
-  Future<bool> isFirstTime() async{
-    final prefs = await SharedPreferences.getInstance();
-    final firstTime = prefs.getBool('welcome') !=null ? true: false;
-    if(!firstTime)prefs.setBool('welcome', true);
-    print("dentro del metodo $firstTime");
-    return firstTime;
-  }
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -27,6 +21,9 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
       ],
+      routes: <String, WidgetBuilder> {
+        '/createLoad': (BuildContext context) => CreateLoad(),
+      },
     );
   }
 

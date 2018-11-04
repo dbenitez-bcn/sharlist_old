@@ -10,6 +10,42 @@ class CreateLoad extends StatefulWidget {
 
 class _CreateLoadState extends State<CreateLoad> {
   final tfName = new TextEditingController();
+  int valueIconOne = 1;
+  int valueIconTwo = 2;
+  int valueIconThree = 3;
+  int valueIconFour = 4;
+
+  void changePassIconOne(){
+    if(valueIconOne<4)valueIconOne=valueIconOne+1;
+    else if (valueIconOne==4)valueIconOne=1;
+    setState(() {
+
+    });
+  }
+
+  void changePassIconTwo(){
+    if(valueIconTwo<4)valueIconTwo=valueIconTwo+1;
+    else if (valueIconTwo==4)valueIconTwo=1;
+    setState(() {
+
+    });
+  }
+
+  void changePassIconThree(){
+    if(valueIconThree<4)valueIconThree=valueIconThree+1;
+    else if (valueIconThree==4)valueIconThree=1;
+    setState(() {
+
+    });
+  }
+
+  void changePassIconFour(){
+    if(valueIconFour<4)valueIconFour=valueIconFour+1;
+    else if (valueIconFour==4)valueIconFour=1;
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +65,14 @@ class _CreateLoadState extends State<CreateLoad> {
   }
 
   Widget _content(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          _dataInputs(context),
-          _buttons(context),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            _dataInputs(context),
+            _buttons(context),
+          ],
+        ),
       ),
     );
   }
@@ -55,11 +93,42 @@ class _CreateLoadState extends State<CreateLoad> {
             ),
           ),
         ),
-        PasswordIcons(),
+        _passwordField(context),
       ],
     );
   }
 
+  Widget _passwordField(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Stack(
+        alignment: AlignmentDirectional.topStart,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.pink, width: 2.0),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: _buildRowIcons(context),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 5.0),
+            child: Container(
+              padding: EdgeInsets.only(left: 5.0, right: 8.0),
+              color: Colors.grey[50],
+              child: Text(
+                FlutterI18n.translate(context, "password"),
+                style: TextStyle(color: Colors.pink, fontSize: 20.0,),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buttons(BuildContext context) {
     return ScopedModelDescendant<CreateLoadModel>(
       builder: (context, _, model) => Column(
@@ -76,7 +145,10 @@ class _CreateLoadState extends State<CreateLoad> {
                       color: Colors.white,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    List<int> passValues = [valueIconOne, valueIconTwo, valueIconThree, valueIconFour];
+                    print("Name-> ${tfName.text} | Pass-> $passValues");
+                  },
                 ),
               ),
               FlatButton(
@@ -92,48 +164,52 @@ class _CreateLoadState extends State<CreateLoad> {
           ),
     );
   }
-}
 
-class PasswordIcons extends StatefulWidget {
-  @override
-  _PasswordIconsState createState() => new _PasswordIconsState();
-}
-
-class _PasswordIconsState extends State<PasswordIcons> {
-  List<int> passValue = [1, 2, 3, 4]; //1-meat, 2-vegetable, 3-milk, 4-fish
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildRowIcons(
+    BuildContext context,
+  ) {
     return ScopedModelDescendant<CreateLoadModel>(
       builder: (context, _, model) => Padding(
             padding: const EdgeInsets.only(
-                top: 0.0, bottom: 16.0, left: 16.0, right: 16.0),
+                top: 16.0, bottom: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                _buildItem(context, 0, passValue[0]),
-                _buildItem(context, 1, passValue[1]),
-                _buildItem(context, 2, passValue[2]),
-                _buildItem(context, 3, passValue[3]),
+                GestureDetector(
+                  onTap: changePassIconOne,
+                  child: _buildIcon(context, valueIconOne),
+                ),
+                GestureDetector(
+                  onTap: changePassIconTwo,
+                  child: _buildIcon(context, valueIconTwo),
+                ),
+                GestureDetector(
+                  onTap: changePassIconThree,
+                  child: _buildIcon(context, valueIconThree),
+                ),
+                GestureDetector(
+                  onTap: changePassIconFour,
+                  child: _buildIcon(context, valueIconFour),
+                ),
               ],
             ),
           ),
     );
   }
 
-  Widget _buildItem(BuildContext context, int value, int index) {
+  Widget _buildIcon(BuildContext context, int value) {
     if (value == 1) {
-      return _buildMeat(context, value, index);
+      return _buildMeat(context);
     } else if (value == 2) {
-      return _buildVegetable(context, value, index);
+      return _buildVegetable(context);
     } else if (value == 3) {
-      return _buildMilk(context, value, index);
+      return _buildMilk(context);
     } else {
-      return _buildFish(context, value, index);
+      return _buildFish(context);
     }
   }
 
-  Widget _buildMeat(BuildContext context, int value, int index) {
+  Widget _buildMeat(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.15,
       height: MediaQuery.of(context).size.width * 0.15,
@@ -150,7 +226,7 @@ class _PasswordIconsState extends State<PasswordIcons> {
     );
   }
 
-  Widget _buildVegetable(BuildContext context, int value, int index) {
+  Widget _buildVegetable(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.15,
       height: MediaQuery.of(context).size.width * 0.15,
@@ -167,7 +243,7 @@ class _PasswordIconsState extends State<PasswordIcons> {
     );
   }
 
-  Widget _buildMilk(BuildContext context, int value, int index) {
+  Widget _buildMilk(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.15,
       height: MediaQuery.of(context).size.width * 0.15,
@@ -184,7 +260,7 @@ class _PasswordIconsState extends State<PasswordIcons> {
     );
   }
 
-  Widget _buildFish(BuildContext context, int value, int index) {
+  Widget _buildFish(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.15,
       height: MediaQuery.of(context).size.width * 0.15,
@@ -201,3 +277,12 @@ class _PasswordIconsState extends State<PasswordIcons> {
     );
   }
 }
+
+/*
+
+class IconPass {
+  final int index;
+  final int value;
+}
+
+*/

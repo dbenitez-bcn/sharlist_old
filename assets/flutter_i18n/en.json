@@ -8,5 +8,6 @@
   "create_new_list":"Create a new list",
   "conect_list":"Acces to list",
   "already_list":"Use an existing list",
-  "name":"Name"
+  "name":"Name",
+  "password":"Password"
 }

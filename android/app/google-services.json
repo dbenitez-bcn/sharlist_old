@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "369254850571",
+    "firebase_url": "https://on-list.firebaseio.com",
+    "project_id": "on-list",
+    "storage_bucket": "on-list.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369254850571:android:99e23cbe336104c7",
+        "android_client_info": {
+          "package_name": "com.logicgear.onlist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "369254850571-4u3r8nukmns4fqhbjm4pm90t3uhs9gk3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0s-JCokoIcvdIVNNMnpj_TqGjeOadfRE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
