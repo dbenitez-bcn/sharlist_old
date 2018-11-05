@@ -88,7 +88,9 @@ class TwoButtons extends StatelessWidget {
               FlatButton(
                 textColor: Colors.white,
                 child: Text(FlutterI18n.translate(context, "skip_tutorial")),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/createLoad');
+                },
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.4,

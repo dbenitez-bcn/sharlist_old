@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:on_list/icons/icomoon.dart';
 import 'package:on_list/model/createLoadModel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -14,37 +16,134 @@ class _CreateLoadState extends State<CreateLoad> {
   int valueIconTwo = 2;
   int valueIconThree = 3;
   int valueIconFour = 4;
+  final _formKey = GlobalKey<FormState>();
+  String errorLabel;
+  bool conecting = false;
 
-  void changePassIconOne(){
-    if(valueIconOne<4)valueIconOne=valueIconOne+1;
-    else if (valueIconOne==4)valueIconOne=1;
-    setState(() {
+  void changePassIconOne() {
+    if (valueIconOne < 4)
+      valueIconOne = valueIconOne + 1;
+    else if (valueIconOne == 4) valueIconOne = 1;
+    setState(() {});
+  }
 
+  void changePassIconTwo() {
+    if (valueIconTwo < 4)
+      valueIconTwo = valueIconTwo + 1;
+    else if (valueIconTwo == 4) valueIconTwo = 1;
+    setState(() {});
+  }
+
+  void changePassIconThree() {
+    if (valueIconThree < 4)
+      valueIconThree = valueIconThree + 1;
+    else if (valueIconThree == 4) valueIconThree = 1;
+    setState(() {});
+  }
+
+  void changePassIconFour() {
+    if (valueIconFour < 4)
+      valueIconFour = valueIconFour + 1;
+    else if (valueIconFour == 4) valueIconFour = 1;
+    setState(() {});
+  }
+
+  void checkEmpty(model) {
+    if (tfName.text == "") {
+      errorLabel = "Introduce un nombre";
+      _formKey.currentState.validate();
+    } else if (tfName.text.contains("/")) {
+      errorLabel = "El nombre no puede contener '/'";
+      _formKey.currentState.validate();
+    } else {
+      model.isCreate ? checkList() : conectList();
+    }
+  }
+
+  void checkList() {
+    Firestore.instance.runTransaction((Transaction transaction) async {
+      QuerySnapshot reference =
+          await Firestore.instance.collection(tfName.text).getDocuments();
+      if (reference.documents.length > 0) {
+        errorLabel = "La lista ya axiste";
+        _formKey.currentState.validate();
+      } else
+        createList();
     });
   }
 
-  void changePassIconTwo(){
-    if(valueIconTwo<4)valueIconTwo=valueIconTwo+1;
-    else if (valueIconTwo==4)valueIconTwo=1;
-    setState(() {
-
-    });
+  void createList() async {
+    print("Lista creada");
+    List<int> passValues = [
+      valueIconOne,
+      valueIconTwo,
+      valueIconThree,
+      valueIconFour
+    ];
+    await Firestore.instance
+        .collection(tfName.text)
+        .document('password')
+        .setData({"password": passValues});
   }
 
-  void changePassIconThree(){
-    if(valueIconThree<4)valueIconThree=valueIconThree+1;
-    else if (valueIconThree==4)valueIconThree=1;
-    setState(() {
+  void conectList() {
+    final DocumentReference lista =
+    Firestore.instance.document(tfName.text + '/password');
+
+    Firestore.instance.runTransaction((Transaction tx) async {
+      Future<DocumentSnapshot> postSnapshot = tx.get(lista);
+      postSnapshot.asStream().forEach(passCorrect);
+    });
+    /*
+    final DocumentReference lista =
+        Firestore.instance.document(tfName.text + '/password');
+
+    Firestore.instance.runTransaction((Transaction tx) async {
+      print("running transacciont");
+      DocumentSnapshot postSnapshot = await tx.get(lista);
+
+      DocumentSnapshot postSnapshot = await tx.get(lista);
+      //print("${postSnapshot['password'].toString()}-${passValues.toString()}");
+      if(postSnapshot.exists){
+        if(postSnapshot['password'].toString()==passValues.toString()){
+          print("Conectar");
+        }else{
+          print("Pass incorrect");
+        }
+        //await postSnapshot['password'].toString()==passValues.toString()?print("Conectar"):print("Pass incorrect");
+      }else{
+        errorLabel = "Nombre incorrecto";
+        _formKey.currentState.validate();
+
+      }
 
     });
+    */
   }
-
-  void changePassIconFour(){
-    if(valueIconFour<4)valueIconFour=valueIconFour+1;
-    else if (valueIconFour==4)valueIconFour=1;
-    setState(() {
-
-    });
+  void passCorrect(data){
+    List<int> passValues = [
+      valueIconOne,
+      valueIconTwo,
+      valueIconThree,
+      valueIconFour
+    ];
+    try{
+      if(data['password'].toString()==passValues.toString()){
+        print("Conectar");
+      }else{
+        errorLabel = "Contraseña incorrecta";
+        _formKey.currentState.validate();
+      }
+    }catch(e){
+      errorLabel = "Nombre incorrecto";
+      _formKey.currentState.validate();
+    }
+    /*
+    if(data['password'].toString()==passValues.toString()){
+      print("Conectar");
+    }else{
+    }
+    */
   }
 
   @override
@@ -78,27 +177,42 @@ class _CreateLoadState extends State<CreateLoad> {
   }
 
   Widget _dataInputs(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TextField(
-            controller: tfName,
-            decoration: InputDecoration(
-              labelText: FlutterI18n.translate(context, "name"),
-              labelStyle: TextStyle(fontSize: 28.0),
-              border: new OutlineInputBorder(
-                borderRadius: new BorderRadius.circular(12.0),
-              ),
-            ),
-          ),
-        ),
-        _passwordField(context),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          _nameField(context),
+          _passwordField(context),
+        ],
+      ),
     );
   }
 
-  Widget _passwordField(BuildContext context){
+  Widget _nameField(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: TextFormField(
+        controller: tfName,
+        decoration: InputDecoration(
+          labelText: FlutterI18n.translate(context, "name"),
+          labelStyle: TextStyle(fontSize: 28.0),
+          border: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(12.0),
+          ),
+        ),
+        validator: (value) {
+
+          conecting=false;
+          setState(() {
+
+          });
+          return errorLabel;
+        },
+      ),
+    );
+  }
+
+  Widget _passwordField(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Stack(
@@ -121,7 +235,10 @@ class _CreateLoadState extends State<CreateLoad> {
               color: Colors.grey[50],
               child: Text(
                 FlutterI18n.translate(context, "password"),
-                style: TextStyle(color: Colors.pink, fontSize: 20.0,),
+                style: TextStyle(
+                  color: Colors.pink,
+                  fontSize: 20.0,
+                ),
               ),
             ),
           ),
@@ -129,11 +246,14 @@ class _CreateLoadState extends State<CreateLoad> {
       ),
     );
   }
+
   Widget _buttons(BuildContext context) {
     return ScopedModelDescendant<CreateLoadModel>(
       builder: (context, _, model) => Column(
             children: <Widget>[
-              SizedBox(
+              conecting
+                  ? CircularProgressIndicator()
+                  : SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: RaisedButton(
                   color: Colors.pink,
@@ -146,8 +266,11 @@ class _CreateLoadState extends State<CreateLoad> {
                     ),
                   ),
                   onPressed: () {
-                    List<int> passValues = [valueIconOne, valueIconTwo, valueIconThree, valueIconFour];
-                    print("Name-> ${tfName.text} | Pass-> $passValues");
+                    conecting=true;
+                    setState(() {
+
+                    });
+                    checkEmpty(model);
                   },
                 ),
               ),
@@ -170,8 +293,7 @@ class _CreateLoadState extends State<CreateLoad> {
   ) {
     return ScopedModelDescendant<CreateLoadModel>(
       builder: (context, _, model) => Padding(
-            padding: const EdgeInsets.only(
-                top: 16.0, bottom: 16.0),
+            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -220,8 +342,9 @@ class _CreateLoadState extends State<CreateLoad> {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        Icons.android,
+        Icomoon.meat,
         color: Colors.red,
+        size: MediaQuery.of(context).size.width * 0.10,
       ),
     );
   }
@@ -237,8 +360,9 @@ class _CreateLoadState extends State<CreateLoad> {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        Icons.android,
+        Icomoon.vegetable,
         color: Colors.lightGreenAccent[700],
+        size: MediaQuery.of(context).size.width * 0.10,
       ),
     );
   }
@@ -254,8 +378,9 @@ class _CreateLoadState extends State<CreateLoad> {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        Icons.android,
+        Icomoon.milk,
         color: Colors.black,
+        size: MediaQuery.of(context).size.width * 0.10,
       ),
     );
   }
@@ -271,18 +396,10 @@ class _CreateLoadState extends State<CreateLoad> {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        Icons.android,
+        Icomoon.fish,
         color: Colors.lightBlue,
+        size: MediaQuery.of(context).size.width * 0.10,
       ),
     );
   }
 }
-
-/*
-
-class IconPass {
-  final int index;
-  final int value;
-}
-
-*/
