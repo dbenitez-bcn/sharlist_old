@@ -3,13 +3,27 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:on_list/createLoad/createLoadList.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:on_list/tutorial/tutorial.dart';
+import 'package:sqflite/sqflite.dart';
+
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
+  void createDb() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, "onlist.db");
+    Database database = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(
+          "CREATE TABLE Lista (id INTEGER PRIMARY KEY, name TEXT, password BLOB)");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    createDb();
     return new MaterialApp(
       title: 'Onlist',
       theme: new ThemeData(
@@ -21,13 +35,13 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
       ],
-      routes: <String, WidgetBuilder> {
+      routes: <String, WidgetBuilder>{
         '/createLoad': (BuildContext context) => CreateLoad(),
       },
     );
   }
 
-  Widget _myHome(BuildContext context){
+  Widget _myHome(BuildContext context) {
     return new FutureBuilder<SharedPreferences>(
       future: SharedPreferences.getInstance(),
       builder:
@@ -38,31 +52,31 @@ class MyApp extends StatelessWidget {
             return _loading(context);
           default:
             if (!snapshot.hasError) {
-        return snapshot.data.getBool("welcome") != null
-        ? new Text("Second Time")
-            : Tutorial();
-        } else {
-        return new Text("Error :(");
+              return snapshot.data.getBool("welcome") != null
+                  ? new Text("Second Time")
+                  : Tutorial();
+            } else {
+              return new Text("Error :(");
+            }
         }
-      }
       },
     );
   }
 
-  Widget _loading(BuildContext context){
-  return Scaffold(
-    body: Center(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width*0.5,
-        height: MediaQuery.of(context).size.width*0.5,
-        child: CircularProgressIndicator(strokeWidth: 10.0,),
+  Widget _loading(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.5,
+          height: MediaQuery.of(context).size.width * 0.5,
+          child: CircularProgressIndicator(
+            strokeWidth: 10.0,
+          ),
+        ),
       ),
-    ),
-  );
+    );
   }
 }
-
-
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -70,7 +84,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomeState extends State<MyHomePage> {
-
   String currentLang = 'en';
 
   switchLang() {
@@ -79,7 +92,7 @@ class MyHomeState extends State<MyHomePage> {
     });
   }
 
-  void changeLang(BuildContext context)async{
+  void changeLang(BuildContext context) async {
     print("tu sabe");
     await FlutterI18n.refresh(context, 'es');
   }
@@ -91,7 +104,7 @@ class MyHomeState extends State<MyHomePage> {
     });
     return new Scaffold(
       appBar:
-      new AppBar(title: new Text(FlutterI18n.translate(context, "title"))),
+          new AppBar(title: new Text(FlutterI18n.translate(context, "title"))),
       body: new Builder(builder: (BuildContext context) {
         return new Center(
           child: new Column(

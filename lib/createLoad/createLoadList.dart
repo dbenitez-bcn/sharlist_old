@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/icons/icomoon.dart';
 import 'package:on_list/model/createLoadModel.dart';
+import 'package:path/path.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sqflite/sqflite.dart' as sqflite;
 
 class CreateLoad extends StatefulWidget {
   @override
@@ -84,6 +86,7 @@ class _CreateLoadState extends State<CreateLoad> {
         .collection(tfName.text)
         .document('password')
         .setData({"password": passValues});
+    insertListDb();
   }
 
   void conectList() {
@@ -105,6 +108,7 @@ class _CreateLoadState extends State<CreateLoad> {
     try{
       if(data['password'].toString()==passValues.toString()){
         print("Conectar");
+        insertListDb();
       }else{
         errorLabel = "Contraseña incorrecta";
         _formKey.currentState.validate();
@@ -113,6 +117,24 @@ class _CreateLoadState extends State<CreateLoad> {
       errorLabel = "Nombre incorrecto";
       _formKey.currentState.validate();
     }
+  }
+
+  void insertListDb()async{
+    String name = tfName.text;
+    List<int> passValues = [
+      valueIconOne,
+      valueIconTwo,
+      valueIconThree,
+      valueIconFour
+    ];
+    var databasesPath = await sqflite.getDatabasesPath();
+    String path = join(databasesPath, "onlist.db");
+    sqflite.Database database = await sqflite.openDatabase(path);
+    await database.transaction((txn) async {
+      int id1 = await txn.rawInsert(
+          'INSERT INTO Lista(name, password) VALUES(?,?)',[name, passValues]);
+      print("inserted1: $id1");
+    });
   }
 
   @override
