@@ -94,31 +94,6 @@ class _CreateLoadState extends State<CreateLoad> {
       Future<DocumentSnapshot> postSnapshot = tx.get(lista);
       postSnapshot.asStream().forEach(passCorrect);
     });
-    /*
-    final DocumentReference lista =
-        Firestore.instance.document(tfName.text + '/password');
-
-    Firestore.instance.runTransaction((Transaction tx) async {
-      print("running transacciont");
-      DocumentSnapshot postSnapshot = await tx.get(lista);
-
-      DocumentSnapshot postSnapshot = await tx.get(lista);
-      //print("${postSnapshot['password'].toString()}-${passValues.toString()}");
-      if(postSnapshot.exists){
-        if(postSnapshot['password'].toString()==passValues.toString()){
-          print("Conectar");
-        }else{
-          print("Pass incorrect");
-        }
-        //await postSnapshot['password'].toString()==passValues.toString()?print("Conectar"):print("Pass incorrect");
-      }else{
-        errorLabel = "Nombre incorrecto";
-        _formKey.currentState.validate();
-
-      }
-
-    });
-    */
   }
   void passCorrect(data){
     List<int> passValues = [
@@ -138,12 +113,6 @@ class _CreateLoadState extends State<CreateLoad> {
       errorLabel = "Nombre incorrecto";
       _formKey.currentState.validate();
     }
-    /*
-    if(data['password'].toString()==passValues.toString()){
-      print("Conectar");
-    }else{
-    }
-    */
   }
 
   @override
