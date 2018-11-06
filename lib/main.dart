@@ -3,6 +3,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:on_list/createLoad/createLoadList.dart';
+import 'package:on_list/index/index.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:on_list/tutorial/tutorial.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       routes: <String, WidgetBuilder>{
         '/createLoad': (BuildContext context) => CreateLoad(),
+        '/index': (BuildContext context) => Index(),
       },
     );
   }
@@ -53,7 +55,7 @@ class MyApp extends StatelessWidget {
           default:
             if (!snapshot.hasError) {
               return snapshot.data.getBool("welcome") != null
-                  ? new Text("Second Time")
+                  ? Index()
                   : Tutorial();
             } else {
               return new Text("Error :(");

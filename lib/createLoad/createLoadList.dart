@@ -5,6 +5,7 @@ import 'package:on_list/icons/icomoon.dart';
 import 'package:on_list/model/createLoadModel.dart';
 import 'package:path/path.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 class CreateLoad extends StatefulWidget {
@@ -21,7 +22,12 @@ class _CreateLoadState extends State<CreateLoad> {
   final _formKey = GlobalKey<FormState>();
   String errorLabel;
   bool conecting = false;
+  BuildContext myContext;
 
+  void setWelcome()async{
+    SharedPreferences props = await SharedPreferences.getInstance();
+    await props.setBool("welcome", true);
+  }
   void changePassIconOne() {
     if (valueIconOne < 4)
       valueIconOne = valueIconOne + 1;
@@ -83,15 +89,14 @@ class _CreateLoadState extends State<CreateLoad> {
       valueIconFour
     ];
     await Firestore.instance
-        .collection(tfName.text)
+        .collection(tfName.text.toLowerCase())
         .document('password')
-        .setData({"password": passValues});
-    insertListDb();
+        .setData({"password": passValues}).then(insertListDb);
   }
 
   void conectList() {
     final DocumentReference lista =
-    Firestore.instance.document(tfName.text + '/password');
+    Firestore.instance.document(tfName.text.toLowerCase() + '/password');
 
     Firestore.instance.runTransaction((Transaction tx) async {
       Future<DocumentSnapshot> postSnapshot = tx.get(lista);
@@ -107,8 +112,7 @@ class _CreateLoadState extends State<CreateLoad> {
     ];
     try{
       if(data['password'].toString()==passValues.toString()){
-        print("Conectar");
-        insertListDb();
+        insertListDb(data);
       }else{
         errorLabel = "Contraseña incorrecta";
         _formKey.currentState.validate();
@@ -119,7 +123,7 @@ class _CreateLoadState extends State<CreateLoad> {
     }
   }
 
-  void insertListDb()async{
+  void insertListDb(data)async{
     String name = tfName.text;
     List<int> passValues = [
       valueIconOne,
@@ -133,12 +137,18 @@ class _CreateLoadState extends State<CreateLoad> {
     await database.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Lista(name, password) VALUES(?,?)',[name, passValues]);
-      print("inserted1: $id1");
+    }).then(createProperty);
+  }
+  void createProperty(data)async{
+    SharedPreferences props = await SharedPreferences.getInstance();
+    await props.setString("currList", tfName.text).then((bool success) {
+      Navigator.pushReplacementNamed(myContext, '/index');
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    setWelcome();
     return ScopedModel<CreateLoadModel>(
       model: CreateLoadModel(),
       child: ScopedModelDescendant<CreateLoadModel>(
@@ -257,6 +267,7 @@ class _CreateLoadState extends State<CreateLoad> {
                     ),
                   ),
                   onPressed: () {
+                    myContext = context;
                     conecting=true;
                     setState(() {
 
