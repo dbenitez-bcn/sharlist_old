@@ -122,10 +122,10 @@ class MyDrawer extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        color: Colors.pink,
-        width: MediaQuery.of(context).size.width,
+    return Container(
+      color: Colors.pink,
+      width: MediaQuery.of(context).size.width,
+      child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
