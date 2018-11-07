@@ -43,7 +43,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
 
     });
 
-    Firestore.instance.collection(widget.lista).document().setData({
+    Firestore.instance.collection(widget.lista.toLowerCase()).document().setData({
       "name": tfName.text,
       "quantity": cantidad,
       "description": tfDesc.text == "" ? tfName.text : tfDesc.text,

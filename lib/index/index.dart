@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/createLoad/addList.dart';
 import 'package:on_list/icons/icomoon.dart';
+import 'package:on_list/index/list.dart';
 import 'package:on_list/index/newProduct.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,9 +68,7 @@ class _IndexAppState extends State<IndexApp> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Text(widget.title),
-      ),
+      body: ListProducts(list: widget.title,),
       floatingActionButton: AddFab(lista: widget.title,),
     );
   }
