@@ -2,5 +2,13 @@
   "language":"español",
   "appName":"Onlist",
   "skip_tutorial":"Saltar",
-  "next":"Siguiente"
+  "next":"Siguiente",
+  "new_list":"Nueva lista",
+  "create_list":"Crear lista",
+  "create_new_list":"Crear nueva lista",
+  "conect_list":"Acceder a la lista",
+  "already_list":"Usar una lista existente",
+  "name":"Nombre",
+  "password":"Contraseña",
+  "add_list":"Añadir lista"
 }

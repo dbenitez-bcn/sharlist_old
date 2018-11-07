@@ -9,5 +9,6 @@
   "conect_list":"Acces to list",
   "already_list":"Use an existing list",
   "name":"Name",
-  "password":"Password"
+  "password":"Password",
+  "add_list":"Add list"
 }

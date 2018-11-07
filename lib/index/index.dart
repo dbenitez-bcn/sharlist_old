@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:on_list/createLoad/createLoadList.dart';
 import 'package:on_list/icons/icomoon.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,12 +68,12 @@ class _IndexAppState extends State<IndexApp> {
 
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
-      child: HeaderDrawer(),
+      child: MyDrawer(),
     );
   }
 }
 
-class HeaderDrawer extends StatelessWidget {
+class MyDrawer extends StatelessWidget {
   String path;
   Database database;
   List<Map> list;
@@ -113,11 +115,7 @@ class HeaderDrawer extends StatelessWidget {
     return Column(
       children: <Widget>[
         _buildHeader(context),
-        Container(
-          height: 1.0,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.grey,
-        ),
+        _buildLine(context),
         _buildBody(context),
       ],
     );
@@ -151,9 +149,30 @@ class HeaderDrawer extends StatelessWidget {
     );
   }
 
+  Widget _buildLine(BuildContext context) {
+    return Container(
+      height: 1.0,
+      width: MediaQuery.of(context).size.width,
+      color: Colors.grey,
+    );
+  }
+
   Widget _buildBody(BuildContext context) {
+    Widget addList = InkWell(
+      splashColor: Colors.pink[200],
+      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+      child: ListTile(
+        leading: Icon(Icons.add_circle),
+        title: Text(FlutterI18n.translate(context, "add_list")),
+      ),
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => CreateLoad()));
+      },
+    );
     return Column(
-      children: listItems,
+      children: listItems + [addList],
+      //children: listItems+listItems+listItems+listItems+listItems+listItems+listItems+listItems+listItems + [addList],
     );
   }
 
