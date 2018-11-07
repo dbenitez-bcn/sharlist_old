@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:on_list/createLoad/createLoadList.dart';
+import 'package:on_list/createLoad/addList.dart';
 import 'package:on_list/icons/icomoon.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,6 +53,12 @@ class IndexApp extends StatefulWidget {
 }
 
 class _IndexAppState extends State<IndexApp> {
+  void reload(String newList){
+    widget.title = newList;
+    Future.delayed(Duration(milliseconds:25 0)).then((value){
+      setState(() {});
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +74,7 @@ class _IndexAppState extends State<IndexApp> {
 
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
-      child: MyDrawer(),
+      child: MyDrawer(reload: reload,),
     );
   }
 }
@@ -79,6 +85,17 @@ class MyDrawer extends StatelessWidget {
   List<Map> list;
   List<Widget> listItems;
   Lista mainList;
+
+  final Function reload;
+
+  void changeCurrList(String newList) async{
+    SharedPreferences props = await SharedPreferences.getInstance();
+    await props.setString("currList", newList).then((bool success) {
+      reload(newList);
+    });
+  }
+
+  MyDrawer({this.reload});
 
   Future<bool> loadData(BuildContext context) async {
     path = join(await getDatabasesPath(), "onlist.db");
@@ -166,8 +183,9 @@ class MyDrawer extends StatelessWidget {
         title: Text(FlutterI18n.translate(context, "add_list")),
       ),
       onTap: () {
+        Navigator.of(context).pop();
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => CreateLoad()));
+            context, MaterialPageRoute(builder: (context) => AddList()));
       },
     );
     return Column(
@@ -186,7 +204,10 @@ class MyDrawer extends StatelessWidget {
         leading: Icon(Icons.list),
         title: Text(lista.name),
       ),
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pop();
+        changeCurrList(lista.name);
+      },
     );
   }
 
