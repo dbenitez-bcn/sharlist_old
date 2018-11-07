@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_list/icons/icomoon.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -74,77 +75,115 @@ class HeaderDrawer extends StatelessWidget {
   String path;
   Database database;
   List<Map> list;
-  List<Lista> listas;
-  // = await database.rawQuery('SELECT * FROM Test');// database = await sqflite.openDatabase(path);
-  Future<List<Map>> getDataBase()async{
+  List<Widget> listItems;
+  Lista mainList;
+
+  Future<bool> loadData(BuildContext context) async {
     path = join(await getDatabasesPath(), "onlist.db");
     database = await openDatabase(path);
-    list = await database.rawQuery('SELECT * FROM Test');
-      return list;
+    listItems = await database.rawQuery('SELECT * FROM Lista').then(
+        (data) => data.map((list) => _buildListItem(context, list)).toList());
+    String currList = await SharedPreferences.getInstance()
+        .then((data) => data.getString('currList'));
+    mainList = await database.rawQuery('SELECT * FROM Lista WHERE name = ?',
+        [currList]).then((data) => Lista.fromMap(data[0]));
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Text("Hula");
-  }
-  /*
-  @override
-  Widget build(BuildContext context) {
-    return new FutureBuilder<String>(
-      future: getDatabasesPath(),
-      builder:
-          (BuildContext context, AsyncSnapshot<String> snapshot) {
+    return new FutureBuilder<bool>(
+      future: loadData(context),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:
             return _buildLoading(context);
           case ConnectionState.done:
-            path = join(snapshot.data, "onlist.db");
-            return _connectDb(context);
+            if (!snapshot.hasError) return _buildDrawer(context);
+            return Text("Error :(");
           default:
             _buildLoading(context);
         }
       },
-    );
-  }
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Database>(
-      future: getDataBase(),
-      builder: (BuildContext context, AsyncSnapshot<Database> snapshot){
-        switch (snapshot.connectionState){
-          case ConnectionState.none:
-          case ConnectionState.waiting:
-            return _buildLoading(context);
-          case ConnectionState.done:
-            database = snapshot.data;
-            return _buildDrawer(context);
-          default:
-            _buildLoading(context);
-        }
-      },
-    );
-  }
-  Widget _buildDrawer(BuildContext context){
-    return Column(
-      children: <Widget>[
-        Text("lista1"),
-        Text("lista2"),
-        Text("lista3"),
-      ],
-    );
-  }
-  Widget _buildLoading(BuildContext context){
-    return SizedBox(
-      height: MediaQuery.of(context).size.height*0.20,
-      width: MediaQuery.of(context).size.width,
-      child: Container(
-          color: Colors.pink,
-          child: CircularProgressIndicator(backgroundColor: Colors.white,)),
     );
   }
 
-  */
+  Widget _buildDrawer(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _buildHeader(context),
+        Container(
+          height: 1.0,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.grey,
+        ),
+        _buildBody(context),
+      ],
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        color: Colors.pink,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildNameDrawer(context),
+            PasswordIcons(
+              pass: mainList.password,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNameDrawer(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 16.0, top: 8.0),
+      child: Text(
+        mainList.name,
+        style: TextStyle(color: Colors.white, fontSize: 32.0),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return Column(
+      children: listItems,
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, Map list) {
+    final Lista lista = Lista.fromMap(list);
+
+    return InkWell(
+      splashColor: Colors.pink[200],
+      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+      child: ListTile(
+        leading: Icon(Icons.list),
+        title: Text(lista.name),
+      ),
+      onTap: () {},
+    );
+  }
+
+  Widget _buildLoading(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(
+            height: MediaQuery.of(context).size.width * 0.3,
+            width: MediaQuery.of(context).size.width * 0.3,
+            child: CircularProgressIndicator(
+              strokeWidth: 6.0,
+            )),
+      ],
+    );
+  }
 }
 
 class Lista {
@@ -159,6 +198,113 @@ class Lista {
         name = map['name'],
         password = map['password'],
         id = map['id'];
+
   @override
-  String toString() => "Record<$name:$password>";
+  String toString() => "Lista: $name($id) - $password";
+}
+
+class PasswordIcons extends StatelessWidget {
+  final List<int> pass;
+
+  PasswordIcons({this.pass});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          _buildIcon(context, pass[0]),
+          _buildIcon(context, pass[1]),
+          _buildIcon(context, pass[2]),
+          _buildIcon(context, pass[3]),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIcon(BuildContext context, int value) {
+    if (value == 1) {
+      return _buildMeat(context);
+    } else if (value == 2) {
+      return _buildVegetable(context);
+    } else if (value == 3) {
+      return _buildMilk(context);
+    } else {
+      return _buildFish(context);
+    }
+  }
+
+  Widget _buildMeat(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
+      alignment: AlignmentDirectional.center,
+      decoration: BoxDecoration(
+        color: Colors.red[100],
+        border: new Border.all(color: Colors.red, width: 2.0),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        Icomoon.meat,
+        color: Colors.red,
+        size: MediaQuery.of(context).size.width * 0.10,
+      ),
+    );
+  }
+
+  Widget _buildVegetable(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
+      alignment: AlignmentDirectional.center,
+      decoration: BoxDecoration(
+        color: Colors.lightGreenAccent[100],
+        border: new Border.all(color: Colors.lightGreenAccent[700], width: 2.0),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        Icomoon.vegetable,
+        color: Colors.lightGreenAccent[700],
+        size: MediaQuery.of(context).size.width * 0.10,
+      ),
+    );
+  }
+
+  Widget _buildMilk(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
+      alignment: AlignmentDirectional.center,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: new Border.all(color: Colors.black, width: 2.0),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        Icomoon.milk,
+        color: Colors.black,
+        size: MediaQuery.of(context).size.width * 0.10,
+      ),
+    );
+  }
+
+  Widget _buildFish(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
+      alignment: AlignmentDirectional.center,
+      decoration: BoxDecoration(
+        color: Colors.lightBlue[100],
+        border: new Border.all(color: Colors.lightBlue, width: 2.0),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        Icomoon.fish,
+        color: Colors.lightBlue,
+        size: MediaQuery.of(context).size.width * 0.10,
+      ),
+    );
+  }
 }
