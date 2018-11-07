@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/createLoad/addList.dart';
 import 'package:on_list/icons/icomoon.dart';
+import 'package:on_list/index/newProduct.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -55,7 +56,7 @@ class IndexApp extends StatefulWidget {
 class _IndexAppState extends State<IndexApp> {
   void reload(String newList){
     widget.title = newList;
-    Future.delayed(Duration(milliseconds:25 0)).then((value){
+    Future.delayed(Duration(milliseconds:250)).then((value){
       setState(() {});
     });
   }
@@ -69,6 +70,7 @@ class _IndexAppState extends State<IndexApp> {
       body: Center(
         child: Text(widget.title),
       ),
+      floatingActionButton: AddFab(lista: widget.title,),
     );
   }
 
@@ -345,6 +347,22 @@ class PasswordIcons extends StatelessWidget {
         color: Colors.lightBlue,
         size: MediaQuery.of(context).size.width * 0.10,
       ),
+    );
+  }
+}
+
+class AddFab extends StatelessWidget {
+final String lista;
+AddFab({this.lista});
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AddProduct(lista: lista,)));
+      },
+      child: Icon(Icons.add),
+      elevation: 8.0,
     );
   }
 }

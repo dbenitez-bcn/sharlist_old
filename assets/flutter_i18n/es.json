@@ -10,5 +10,11 @@
   "already_list":"Usar una lista existente",
   "name":"Nombre",
   "password":"Contraseña",
-  "add_list":"Añadir lista"
+  "add_list":"Añadir lista",
+  "descripcion":"Descripción",
+  "descripcion_opcional":"(opcional)Describe el producto...",
+  "add_list":"Añadir a la lista",
+  "add_product":"Añadir producto",
+  "empty_list":"Lista vacía",
+  "add_press_button":"Añade productos pulsando el botón"
 }
