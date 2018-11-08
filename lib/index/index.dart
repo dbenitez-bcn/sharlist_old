@@ -172,7 +172,6 @@ class MyDrawer extends StatelessWidget {
       child: Text(
         mainList.name,
         style: TextStyle(color: Colors.white, fontSize: 34.0, letterSpacing: -0.5),
-        //style: Theme.of(context).//textTheme.display3,
       ),
     );
   }
