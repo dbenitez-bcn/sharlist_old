@@ -42,8 +42,14 @@ class AddList extends StatelessWidget {
   Widget _buildConnect(BuildContext context) {
     return InkWell(
       splashColor: Colors.pink[200],
-      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      child: Text(FlutterI18n.translate(context, "conect_list")),
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.7,
+        child: FlatButton(
+          onPressed: null,
+          child: Text(FlutterI18n.translate(context, "conect_list"), style: TextStyle(color: Colors.black),),
+        ),
+      ),
       onTap: () {},
     );
   }
