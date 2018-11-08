@@ -72,6 +72,9 @@ class _AddListBodyState extends State<AddListBody> {
       _formKey.currentState.validate();
     } else {
       if (await checkConection()) {
+        setState(() {
+          conecting = true;
+        });
         isCreate ? createList() : accesList();
       } else {
         Scaffold.of(context).showSnackBar(
@@ -98,9 +101,6 @@ class _AddListBodyState extends State<AddListBody> {
   }
 
   void createList() async {
-    setState(() {
-      conecting = true;
-    });
     if (await listExist()) {
       errorLabel = FlutterI18n.translate(context, "list_exist");
       _formKey.currentState.validate();
@@ -119,17 +119,46 @@ class _AddListBodyState extends State<AddListBody> {
   }
 
   void accesList() async {
-    print("Accediendo a la lista");
-    setState(() {
-      conecting = true;
-    });
-    Future.delayed(Duration(seconds: 2)).then((value) {
-      setState(() {
-        conecting = false;
-      });
+    if (!await listExist()) {
+      errorLabel = FlutterI18n.translate(context, "list_no_exist");
+      _formKey.currentState.validate();
+    } else {
+      var password = await getPassword();
+      password is List<dynamic> ?
+      checkPasswords(password): someError();
+    }
+  }
+
+  Future<dynamic> getPassword() async {
+   return await Firestore.instance
+        .document(tfName.text.toLowerCase() + '/password')
+        .get()
+        .then((data) {
+     return data['password'];
+    }).catchError((e){
+      return "Error: $e";
     });
   }
 
+  void checkPasswords(List<dynamic> password){
+    List<int> passValues = [
+      valueIconOne,
+      valueIconTwo,
+      valueIconThree,
+      valueIconFour
+    ];
+    if(passValues.toString()==password.toString())insertListDb();
+    else{
+      errorLabel = FlutterI18n.translate(context, "bad_pass");
+      _formKey.currentState.validate();
+    }
+  }
+  void someError(){
+    errorLabel = "";
+    _formKey.currentState.validate();
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, "some_error"),)));
+  }
+  
   void insertListDb() async {
     String name = tfName.text;
     List<int> passValues = [
@@ -156,7 +185,7 @@ class _AddListBodyState extends State<AddListBody> {
 
   Future<bool> listExist() async {
     QuerySnapshot reference =
-    await Firestore.instance.collection(tfName.text).getDocuments();
+        await Firestore.instance.collection(tfName.text).getDocuments();
     if (reference.documents.length > 0)
       return true;
     else
@@ -171,9 +200,9 @@ class _AddListBodyState extends State<AddListBody> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-              _nameField(context),
-              _passwordField(context),
-            ] +
+                  _nameField(context),
+                  _passwordField(context),
+                ] +
                 (conecting ? _loadingBuilder(context) : _buttons(context)),
           ),
         ),
@@ -237,7 +266,9 @@ class _AddListBodyState extends State<AddListBody> {
     );
   }
 
-  Widget _buildRowIcons(BuildContext context,) {
+  Widget _buildRowIcons(
+    BuildContext context,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
       child: Row(
@@ -278,14 +309,8 @@ class _AddListBodyState extends State<AddListBody> {
 
   Widget _buildMeat(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width * 0.15,
-      height: MediaQuery
-          .of(context)
-          .size
-          .width * 0.15,
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.red[100],
@@ -295,24 +320,15 @@ class _AddListBodyState extends State<AddListBody> {
       child: Icon(
         Icomoon.meat,
         color: Colors.red,
-        size: MediaQuery
-            .of(context)
-            .size
-            .width * 0.10,
+        size: MediaQuery.of(context).size.width * 0.10,
       ),
     );
   }
 
   Widget _buildVegetable(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width * 0.15,
-      height: MediaQuery
-          .of(context)
-          .size
-          .width * 0.15,
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.lightGreenAccent[100],
@@ -322,24 +338,15 @@ class _AddListBodyState extends State<AddListBody> {
       child: Icon(
         Icomoon.vegetable,
         color: Colors.lightGreenAccent[700],
-        size: MediaQuery
-            .of(context)
-            .size
-            .width * 0.10,
+        size: MediaQuery.of(context).size.width * 0.10,
       ),
     );
   }
 
   Widget _buildMilk(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width * 0.15,
-      height: MediaQuery
-          .of(context)
-          .size
-          .width * 0.15,
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -349,24 +356,15 @@ class _AddListBodyState extends State<AddListBody> {
       child: Icon(
         Icomoon.milk,
         color: Colors.black,
-        size: MediaQuery
-            .of(context)
-            .size
-            .width * 0.10,
+        size: MediaQuery.of(context).size.width * 0.10,
       ),
     );
   }
 
   Widget _buildFish(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width * 0.15,
-      height: MediaQuery
-          .of(context)
-          .size
-          .width * 0.15,
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.lightBlue[100],
@@ -376,10 +374,7 @@ class _AddListBodyState extends State<AddListBody> {
       child: Icon(
         Icomoon.fish,
         color: Colors.lightBlue,
-        size: MediaQuery
-            .of(context)
-            .size
-            .width * 0.10,
+        size: MediaQuery.of(context).size.width * 0.10,
       ),
     );
   }
@@ -390,10 +385,7 @@ class _AddListBodyState extends State<AddListBody> {
 
   Widget _buildCreate(BuildContext context) {
     return SizedBox(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width * 0.7,
+      width: MediaQuery.of(context).size.width * 0.7,
       child: RaisedButton(
         color: Colors.pink,
         child: Text(
@@ -402,7 +394,7 @@ class _AddListBodyState extends State<AddListBody> {
             color: Colors.white,
           ),
         ),
-        onPressed: (){
+        onPressed: () {
           firstStep(true);
         },
       ),
@@ -414,10 +406,7 @@ class _AddListBodyState extends State<AddListBody> {
       splashColor: Colors.pink[200],
       borderRadius: BorderRadius.all(Radius.circular(5.0)),
       child: SizedBox(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.7,
+        width: MediaQuery.of(context).size.width * 0.7,
         child: FlatButton(
           onPressed: null,
           child: Text(
@@ -426,7 +415,7 @@ class _AddListBodyState extends State<AddListBody> {
           ),
         ),
       ),
-      onTap: (){
+      onTap: () {
         firstStep(false);
       },
     );

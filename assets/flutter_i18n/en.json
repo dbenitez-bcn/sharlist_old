@@ -17,5 +17,11 @@
   "add_product":"Add product",
   "empty_list":"Empty list",
   "add_press_button":"Add products pessing the button",
-  "connect_error":"Could not connect. Please, retry later."
+  "connect_error":"Could not connect. Please, retry later.",
+  "some_error":"Something gone wrong. Please, retry later.",
+  "no_name":"Introduce a name",
+  "no_slash":"The name can not contain '/'",
+  "list_exist":"List already exists",
+  "list_no_exist":"The list was not found",
+  "bad_pass":"Incorrect password"
 }
