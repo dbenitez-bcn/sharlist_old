@@ -89,14 +89,14 @@ class MyDrawer extends StatelessWidget {
 
   final Function reload;
 
+  MyDrawer({this.reload});
+
   void changeCurrList(String newList) async{
     SharedPreferences props = await SharedPreferences.getInstance();
     await props.setString("currList", newList).then((bool success) {
       reload(newList);
     });
   }
-
-  MyDrawer({this.reload});
 
   Future<bool> loadData(BuildContext context) async {
     path = join(await getDatabasesPath(), "onlist.db");
@@ -141,7 +141,16 @@ class MyDrawer extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      color: Colors.pink,
+      decoration: BoxDecoration(
+        color: Colors.pink,
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black45,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
       width: MediaQuery.of(context).size.width,
       child: SafeArea(
         child: Column(
@@ -162,7 +171,8 @@ class MyDrawer extends StatelessWidget {
       padding: EdgeInsets.only(left: 16.0, top: 8.0),
       child: Text(
         mainList.name,
-        style: TextStyle(color: Colors.white, fontSize: 32.0),
+        style: TextStyle(color: Colors.white, fontSize: 34.0, letterSpacing: -0.5),
+        //style: Theme.of(context).//textTheme.display3,
       ),
     );
   }

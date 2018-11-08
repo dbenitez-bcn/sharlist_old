@@ -4,26 +4,30 @@ import 'package:flutter/rendering.dart';
 
 class ListProducts extends StatefulWidget {
   final String list;
+
   ListProducts({this.list});
+
   @override
   _ListProductsState createState() => new _ListProductsState();
 }
 
 class _ListProductsState extends State<ListProducts> {
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream:
-      Firestore.instance.collection(widget.list.toLowerCase()).orderBy("name").snapshots(),
+      stream: Firestore.instance
+          .collection(widget.list.toLowerCase())
+          .orderBy("name")
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Container(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 24.0),
-                child: CircularProgressIndicator(),
-              ));
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+              child: CircularProgressIndicator(),
+            ),
+          );
         if (snapshot.data.documents.length == 0) return NoProducts();
         return _buildList(context, snapshot.data.documents);
       },
@@ -33,8 +37,7 @@ class _ListProductsState extends State<ListProducts> {
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
-      children:
-      snapshot.map((data) => _buildListItem(context, data)).toList(),
+      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
     );
   }
 
@@ -43,12 +46,11 @@ class _ListProductsState extends State<ListProducts> {
 
     return Dismissible(
       key: ValueKey(record.name),
+      direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        if(direction ==DismissDirection.endToStart){
-          if(record.reference.delete() != null)
-            Scaffold.of(context).showSnackBar(
-                SnackBar(content: Text(record.name.toUpperCase() + " comprado!")));
-        }
+        if (record.reference.delete() != null)
+          Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(record.name.toUpperCase() + " comprado!")));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -72,9 +74,7 @@ class _ListProductsState extends State<ListProducts> {
       ),
     );
   }
-
 }
-
 
 class Record {
   final String name;
@@ -103,7 +103,6 @@ class NoProducts extends StatelessWidget {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        //crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
             "Lista vacía",
