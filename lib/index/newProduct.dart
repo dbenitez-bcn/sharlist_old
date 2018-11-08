@@ -136,7 +136,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          FlutterI18n.translate(context, "add_list"),
+                          FlutterI18n.translate(context, "add_to_list"),
                           style: TextStyle(fontSize: 32.0, color: Colors.white),
                         ),
                       ),

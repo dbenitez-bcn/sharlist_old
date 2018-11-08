@@ -6,7 +6,7 @@
   "new_list":"New list",
   "create_list":"Create list",
   "create_new_list":"Create a new list",
-  "conect_list":"Acces to list",
+  "conect_list":"Acces to an existing list",
   "already_list":"Use an existing list",
   "name":"Name",
   "password":"Password",
@@ -16,5 +16,6 @@
   "add_list":"Add to the list",
   "add_product":"Add product",
   "empty_list":"Empty list",
-  "add_press_button":"Add products pessing the button"
+  "add_press_button":"Add products pessing the button",
+  "connect_error":"Could not connect. Please, retry later."
 }

@@ -6,15 +6,19 @@
   "new_list":"Nueva lista",
   "create_list":"Crear lista",
   "create_new_list":"Crear nueva lista",
-  "conect_list":"Acceder a la lista",
+  "conect_list":"Acceder a una lista existente",
   "already_list":"Usar una lista existente",
   "name":"Nombre",
   "password":"Contraseña",
   "add_list":"Añadir lista",
   "descripcion":"Descripción",
   "descripcion_opcional":"(opcional)Describe el producto...",
-  "add_list":"Añadir a la lista",
+  "add_to_list":"Añadir a la lista",
   "add_product":"Añadir producto",
   "empty_list":"Lista vacía",
-  "add_press_button":"Añade productos pulsando el botón"
+  "add_press_button":"Añade productos pulsando el botón",
+  "connect_error":"No se pudo conectar. Por favor, vuelva a intentarlo más tarde.",
+  "no_name":"Introduce un nombre",
+  "no_slash":"El nombre no puede contener '/'",
+  "list_exist":"La lista ya axiste"
 }
