@@ -135,7 +135,7 @@ class EmpezarApp extends StatelessWidget {
           color: Colors.white,
           child: Text("To app", style: TextStyle(color: Colors.pinkAccent),),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/createLoad');
+            Navigator.pushReplacementNamed(context, '/index');
           }),
     );
   }

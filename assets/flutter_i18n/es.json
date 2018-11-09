@@ -23,5 +23,7 @@
   "no_slash":"El nombre no puede contener '/'",
   "list_exist":"La lista ya axiste",
   "list_no_exist":"No se encontró la lista",
-  "bad_pass":"Contraseña incorrecta"
+  "bad_pass":"Contraseña incorrecta",
+  "no_lists":"No tienes listas",
+  "add_lists_empty":"Añade listas desde el menú"
 }

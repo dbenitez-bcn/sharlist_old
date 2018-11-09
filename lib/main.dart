@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       home: _myHome(context),
       localizationsDelegates: [
-        FlutterI18nDelegate(false, 'es'),
+        FlutterI18nDelegate(false, 'en'),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
       ],

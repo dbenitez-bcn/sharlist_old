@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 class ListProducts extends StatefulWidget {
   final String list;
@@ -105,11 +106,11 @@ class NoProducts extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            "Lista vacía",
+            FlutterI18n.translate(context, "empty_list"),
             style: TextStyle(color: Colors.grey[700], fontSize: 32.0),
           ),
           Text(
-            "Añade productos con el botón inferior",
+            FlutterI18n.translate(context, "add_press_button"),
             style: TextStyle(
               color: Colors.grey[400],
               fontSize: 24.0,

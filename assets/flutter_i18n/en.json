@@ -23,5 +23,7 @@
   "no_slash":"The name can not contain '/'",
   "list_exist":"List already exists",
   "list_no_exist":"The list was not found",
-  "bad_pass":"Incorrect password"
+  "bad_pass":"Incorrect password",
+  "no_lists":"You don't have lists",
+  "add_lists_empty":"Add lists from the menu"
 }
