@@ -15,7 +15,6 @@ class Index extends StatelessWidget {
   Future<bool> haveLists() async{
     String path = join(await getDatabasesPath(), "onlist.db");
     Database database = await openDatabase(path);
-    //listItems =
     List<Map<String, dynamic>> listas =  await database.rawQuery('SELECT * FROM Lista');
     if(listas.length>0)return true;
     else return false;
@@ -73,8 +72,9 @@ class IndexApp extends StatefulWidget {
 }
 
 class _IndexAppState extends State<IndexApp> {
-  void reload(String newTitle){
+  void reload(String newTitle, bool newHaveList){
     widget.title = newTitle;
+    widget.haveList = newHaveList;
     Future.delayed(Duration(milliseconds:250)).then((value){
       setState(() {});
     });

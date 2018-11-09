@@ -26,5 +26,9 @@
   "bad_pass":"Incorrect password",
   "no_lists":"You don't have lists",
   "add_lists_empty":"Add lists from the menu",
-  "start_app":"I get it!"
+  "start_app":"I get it!",
+  "detele_list":"Delete list?",
+  "detele_list_content":"This action will no afect the other users who use this list.",
+  "ok":"OK",
+  "cancel":"Cancel"
 }

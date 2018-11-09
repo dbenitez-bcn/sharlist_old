@@ -17,10 +17,10 @@ class MyDrawer extends StatelessWidget {
 
   MyDrawer({this.reload});
 
-  void changeCurrList(String newList) async {
+  void changeCurrList(String newList, bool newHaveList) async {
     SharedPreferences props = await SharedPreferences.getInstance();
     await props.setString("currList", newList).then((bool success) {
-      reload(newList);
+      reload(newList, newHaveList);
     });
   }
 
@@ -31,9 +31,14 @@ class MyDrawer extends StatelessWidget {
         (data) => data.map((list) => _buildListItem(context, list)).toList());
     String currList = await SharedPreferences.getInstance()
         .then((data) => data.getString('currList'));
-    if(currList!=null)mainList = await database.rawQuery('SELECT * FROM Lista WHERE name = ?',
-        [currList]).then((data) => Lista.fromMap(data[0]));
-    else mainList = Lista(name: FlutterI18n.translate(context, "appName"), password: [0,0,0,0], id: -99);
+    if (currList != null)
+      mainList = await database.rawQuery('SELECT * FROM Lista WHERE name = ?',
+          [currList]).then((data) => Lista.fromMap(data[0]));
+    else
+      mainList = Lista(
+          name: FlutterI18n.translate(context, "appName"),
+          password: [0, 0, 0, 0],
+          id: -99);
     return true;
   }
 
@@ -57,12 +62,14 @@ class MyDrawer extends StatelessWidget {
   }
 
   Widget _buildDrawer(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _buildHeader(context),
-        _buildLine(context),
-        _buildBody(context),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          _buildHeader(context),
+          _buildLine(context),
+          _buildBody(context),
+        ],
+      ),
     );
   }
 
@@ -135,6 +142,27 @@ class MyDrawer extends StatelessWidget {
   Widget _buildListItem(BuildContext context, Map list) {
     final Lista lista = Lista.fromMap(list);
 
+    void deteleList() async {
+      await database.rawDelete("DELETE FROM Lista WHERE id = ?", [lista.id]);
+      List<Map<String, dynamic>> listas =
+          await database.rawQuery('SELECT * FROM Lista');
+      if (listas.length > 0) {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        if (preferences.getString('currList') == lista.name) {
+          changeCurrList(listas[0]['name'], true);
+        } else {
+          changeCurrList(preferences.getString('currList'), true);
+        }
+        Navigator.of(context).pop();
+      } else {
+        await SharedPreferences.getInstance().then((preferences) {
+          preferences.setString("currList", null);
+          Navigator.of(context).pop();
+          reload(FlutterI18n.translate(context, "appName"), false);
+        });
+      }
+    }
+
     return InkWell(
       splashColor: Colors.pink[200],
       borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -144,7 +172,32 @@ class MyDrawer extends StatelessWidget {
       ),
       onTap: () {
         Navigator.of(context).pop();
-        changeCurrList(lista.name);
+        changeCurrList(lista.name, true);
+      },
+      onLongPress: () {
+        showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                  title: Text(FlutterI18n.translate(context, "detele_list")),
+                  content: Text(
+                      FlutterI18n.translate(context, "detele_list_content")),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(
+                        FlutterI18n.translate(context, "cancel"),
+                      ),
+                      onPressed: () => Navigator.pop(context, "cancel"),
+                    ),
+                    FlatButton(
+                      child: Text(
+                        FlutterI18n.translate(context, "ok"),
+                      ),
+                      onPressed: () => Navigator.pop(context, "ok"),
+                    ),
+                  ],
+                )).then<String>((desicion) {
+          if (desicion == "ok") deteleList();
+        });
       },
     );
   }
@@ -176,6 +229,7 @@ class Lista {
         name = map['name'],
         password = map['password'],
         id = map['id'];
+
   Lista({this.name, this.password, this.id});
 
   @override
@@ -210,9 +264,9 @@ class PasswordIcons extends StatelessWidget {
       return _buildVegetable(context);
     } else if (value == 3) {
       return _buildMilk(context);
-    } else if (value == 4){
+    } else if (value == 4) {
       return _buildFish(context);
-    }else if (value == 0){
+    } else if (value == 0) {
       return _buildNone(context);
     }
   }
@@ -298,7 +352,6 @@ class PasswordIcons extends StatelessWidget {
         color: Colors.pink[100],
         border: new Border.all(color: Colors.pink[700], width: 2.0),
         shape: BoxShape.circle,
-
       ),
       child: Icon(
         Icons.android,

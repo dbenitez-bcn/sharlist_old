@@ -26,5 +26,9 @@
   "bad_pass":"Contraseña incorrecta",
   "no_lists":"No tienes listas",
   "add_lists_empty":"Añade listas desde el menú",
-  "start_app":"¡Entendido!"
+  "start_app":"¡Entendido!",
+  "detele_list":"¿Eliminar lista?",
+  "detele_list_content":"Esa acción no afectará a los otros usuarios que usen esta lista.",
+  "ok":"Si",
+  "cancel":"Cancelar"
 }
