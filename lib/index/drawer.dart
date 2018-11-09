@@ -31,8 +31,9 @@ class MyDrawer extends StatelessWidget {
         (data) => data.map((list) => _buildListItem(context, list)).toList());
     String currList = await SharedPreferences.getInstance()
         .then((data) => data.getString('currList'));
-    mainList = await database.rawQuery('SELECT * FROM Lista WHERE name = ?',
+    if(currList!=null)mainList = await database.rawQuery('SELECT * FROM Lista WHERE name = ?',
         [currList]).then((data) => Lista.fromMap(data[0]));
+    else mainList = Lista(name: FlutterI18n.translate(context, "appName"), password: [0,0,0,0], id: -99);
     return true;
   }
 
@@ -175,6 +176,7 @@ class Lista {
         name = map['name'],
         password = map['password'],
         id = map['id'];
+  Lista({this.name, this.password, this.id});
 
   @override
   String toString() => "Lista: $name($id) - $password";
@@ -208,8 +210,10 @@ class PasswordIcons extends StatelessWidget {
       return _buildVegetable(context);
     } else if (value == 3) {
       return _buildMilk(context);
-    } else {
+    } else if (value == 4){
       return _buildFish(context);
+    }else if (value == 0){
+      return _buildNone(context);
     }
   }
 
@@ -280,6 +284,25 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.fish,
         color: Colors.lightBlue,
+        size: MediaQuery.of(context).size.width * 0.10,
+      ),
+    );
+  }
+
+  Widget _buildNone(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.width * 0.15,
+      alignment: AlignmentDirectional.center,
+      decoration: BoxDecoration(
+        color: Colors.pink[100],
+        border: new Border.all(color: Colors.pink[700], width: 2.0),
+        shape: BoxShape.circle,
+
+      ),
+      child: Icon(
+        Icons.android,
+        color: Colors.pink[100],
         size: MediaQuery.of(context).size.width * 0.10,
       ),
     );

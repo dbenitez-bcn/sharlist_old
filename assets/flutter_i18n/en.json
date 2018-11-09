@@ -25,5 +25,6 @@
   "list_no_exist":"The list was not found",
   "bad_pass":"Incorrect password",
   "no_lists":"You don't have lists",
-  "add_lists_empty":"Add lists from the menu"
+  "add_lists_empty":"Add lists from the menu",
+  "start_app":"I get it!"
 }

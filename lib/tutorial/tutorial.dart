@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/model/tutorialModel.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Tutorial extends StatefulWidget {
   @override
@@ -20,8 +21,8 @@ class _TutorialState extends State<Tutorial> {
             PageViewPictures(),
             ScopedModelDescendant<TutorialModel>(
               builder: (context, _, model) => SafeArea(
-                child: model.twoButtons ? TwoButtons() : EmpezarApp(),
-              ),
+                    child: model.twoButtons ? TwoButtons() : EmpezarApp(),
+                  ),
             ),
           ],
         ),
@@ -88,8 +89,10 @@ class TwoButtons extends StatelessWidget {
               FlatButton(
                 textColor: Colors.white,
                 child: Text(FlutterI18n.translate(context, "skip_tutorial")),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/createLoad');
+                onPressed: () async {
+                  SharedPreferences preferences = await SharedPreferences.getInstance();
+                  await preferences.setBool("firstTime", false);
+                  Navigator.pushReplacementNamed(context, '/index');
                 },
               ),
               SizedBox(
@@ -130,13 +133,19 @@ class EmpezarApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width*0.7,
+      width: MediaQuery.of(context).size.width * 0.7,
       child: new RaisedButton(
-          color: Colors.white,
-          child: Text("To app", style: TextStyle(color: Colors.pinkAccent),),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/index');
-          }),
+        color: Colors.white,
+        child: Text(
+          FlutterI18n.translate(context, "start_app"),
+          style: TextStyle(color: Colors.pinkAccent),
+        ),
+        onPressed: () async {
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          await preferences.setBool("firstTime", false);
+          Navigator.pushReplacementNamed(context, '/index');
+        },
+      ),
     );
   }
 }

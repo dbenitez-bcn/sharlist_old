@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:on_list/createLoad/createLoadList.dart';
 import 'package:on_list/index/index.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,26 +35,30 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate
       ],
       routes: <String, WidgetBuilder>{
-        '/createLoad': (BuildContext context) => CreateLoad(),
         '/index': (BuildContext context) => Index(),
       },
     );
   }
 
+  Future<bool> firstTime() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return await preferences.getBool("firstTime") ?? true;
+  }
+
   Widget _myHome(BuildContext context) {
-    return new FutureBuilder<SharedPreferences>(
-      future: SharedPreferences.getInstance(),
+    return new FutureBuilder<bool>(
+      future: firstTime(),
       builder:
-          (BuildContext context, AsyncSnapshot<SharedPreferences> snapshot) {
+          (BuildContext context, AsyncSnapshot<bool> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:
             return _loading(context);
           default:
             if (!snapshot.hasError) {
-              return snapshot.data.getBool("welcome") != null
-                  ? Index()
-                  : Tutorial();
+              return snapshot.data
+                  ? Tutorial()
+                  : Index();
             } else {
               return new Text("Error :(");
             }
