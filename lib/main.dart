@@ -27,6 +27,9 @@ class MyApp extends StatelessWidget {
       title: 'Onlist',
       theme: new ThemeData(
         primarySwatch: Colors.pink,
+        //primarySwatch: Colors.green
+        //primaryColor: Colors.limeAccent[400],
+        //primaryColorLight: Color(0xfffdff58)
       ),
       home: _myHome(context),
       localizationsDelegates: [

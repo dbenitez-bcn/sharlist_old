@@ -5,14 +5,32 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 
 class ListProducts extends StatefulWidget {
   final String list;
-
-  ListProducts({this.list});
+  final Function setCanShow;
+  ListProducts({this.list, this.setCanShow});
 
   @override
   _ListProductsState createState() => new _ListProductsState();
 }
 
 class _ListProductsState extends State<ListProducts> {
+  ScrollController scrollController = ScrollController();
+  @override
+  void initState() {
+    scrollController.addListener(listener);
+    super.initState();
+  }
+
+  void listener(){
+    if(scrollController.position.userScrollDirection == ScrollDirection.forward)widget.setCanShow(true);
+    else widget.setCanShow(false);
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(listener);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -37,6 +55,7 @@ class _ListProductsState extends State<ListProducts> {
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
+      controller: scrollController,
       padding: const EdgeInsets.only(top: 20.0),
       children: snapshot.map((data) => _buildListItem(context, data)).toList(),
     );
@@ -101,28 +120,30 @@ class Record {
 class NoProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            FlutterI18n.translate(context, "empty_list"),
-            style: TextStyle(color: Colors.grey[700], fontSize: 32.0),
-          ),
-          Text(
-            FlutterI18n.translate(context, "add_press_button"),
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 24.0,
+    return Center(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              FlutterI18n.translate(context, "empty_list"),
+              style: TextStyle(color: Colors.grey[700], fontSize: 32.0),
             ),
-            textAlign: TextAlign.center,
-          ),
-          Icon(
-            Icons.shopping_basket,
-            color: Colors.grey[800],
-            size: 150.0,
-          )
-        ],
+            Text(
+              FlutterI18n.translate(context, "add_press_button"),
+              style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 24.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Icon(
+              Icons.shopping_basket,
+              color: Colors.grey[800],
+              size: 150.0,
+            )
+          ],
+        ),
       ),
     );
   }

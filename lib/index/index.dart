@@ -64,7 +64,7 @@ class Index extends StatelessWidget {
 class IndexApp extends StatefulWidget {
   String title;
   bool haveList;
-
+  bool canShow = true;
   IndexApp({this.title, this.haveList});
 
   @override
@@ -79,6 +79,13 @@ class _IndexAppState extends State<IndexApp> {
       setState(() {});
     });
   }
+
+  void setCanShow(bool value){
+    setState(() {
+      widget.canShow=value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,8 +93,8 @@ class _IndexAppState extends State<IndexApp> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: widget.haveList ? ListProducts(list: widget.title,) : NoLists(),
-      floatingActionButton: widget.haveList ? AddFab(lista: widget.title,) : null,
+      body: widget.haveList ? ListProducts(list: widget.title, setCanShow: setCanShow,) : NoLists(),
+      floatingActionButton: widget.haveList && widget.canShow ? AddFab(lista: widget.title,) : null,
     );
   }
 
