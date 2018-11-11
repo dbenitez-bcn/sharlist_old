@@ -67,7 +67,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
                 },
                 controller: tfName,
                 decoration: InputDecoration(
-                  labelText: FlutterI18n.translate(context, "nombre"),
+                  labelText: FlutterI18n.translate(context, "name"),
                   labelStyle: TextStyle(fontSize: 28.0),
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(12.0),
@@ -107,7 +107,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
                     width: MediaQuery.of(context).size.width * 0.25,
                     height: MediaQuery.of(context).size.width * 0.25,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.pink[400], width: 3.0),
+                      border: Border.all(color: Theme.of(context).primaryColor, width: 3.0),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -132,7 +132,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
                   ? CircularProgressIndicator()
                   : RaisedButton(
                       onPressed: tfName.text == "" ? null : addProduct,
-                      color: Colors.pink,
+                      color: Theme.of(context).primaryColor,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(

@@ -1,6 +1,6 @@
 {
   "language":"english",
-  "appName":"Onlist",
+  "appName":"Home list",
   "skip_tutorial":"Skip",
   "next":"Next",
   "new_list":"New list",
@@ -30,5 +30,22 @@
   "detele_list":"Delete list?",
   "detele_list_content":"This action will no afect the other users who use this list.",
   "ok":"OK",
-  "cancel":"Cancel"
+  "cancel":"Cancel",
+  "help":"Help",
+  "faq":"FAQ",
+  "faq_large":"Frequently Asked Questions",
+  "version":"Version",
+  "contact":"Contact us",
+  "rate":"Rate us",
+  "question_one":"¿Cómo creo una lista?",
+  "answare_one":"Puedes crear una nueva lista desde el menu de la página principal. Desde allí pulsa el boton de 'Añadir lista', añade un nombre y una contraseña para poder crear la nueva lista.",
+  "question_two":"¿Cómo puedo borrar una lista?",
+  "answare_two":"Desde el menú podrás ver todas las listas a las que estás conectad@. Manteniendo pulsado el nombre de la lista podrás acceder a la opción de borrar la lista. Esta acción no eliminará la lista de forma permante. Los otros usuarios conectados podrán seguir utilizando la lista",
+  "question_three":"¿Puedo eliminar de forma permanente una lista?",
+  "answare_three":"No.",
+  "question_four":"¿Cómo sé la contraseña de una lista?",
+  "answare_four":"Puedes encontrar la contraseña de una lista a la que estés conectad@ desde el menú principal. Allí verás la lista actual a la que estás conectad@ y su contraseña.",
+  "share":"Share",
+  "share_text":"Share Home list with your contacts",
+  "shareApp":"¡How easy it is to make the purchase with Home List! Download the app now and start yhaving the whole family connected. \nAndroid: https://www.android.com\niPhone: https://www.apple.com"
 }

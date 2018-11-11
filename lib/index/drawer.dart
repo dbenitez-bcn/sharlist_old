@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/index/addList.dart';
 import 'package:on_list/icons/icomoon.dart';
+import 'package:on_list/index/help.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,7 +67,6 @@ class MyDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           _buildHeader(context),
-          _buildLine(context),
           _buildBody(context),
         ],
       ),
@@ -76,7 +76,7 @@ class MyDrawer extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.pink,
+        color: Theme.of(context).primaryColor,
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black45,
@@ -111,31 +111,39 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildLine(BuildContext context) {
-    return Container(
-      height: 1.0,
-      width: MediaQuery.of(context).size.width,
-      color: Colors.grey,
-    );
-  }
-
   Widget _buildBody(BuildContext context) {
-    Widget addList = InkWell(
-      splashColor: Colors.pink[200],
-      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      child: ListTile(
-        leading: Icon(Icons.add_circle),
-        title: Text(FlutterI18n.translate(context, "add_list")),
-      ),
-      onTap: () {
+    void openWindow(Widget window) async {
+      await Future.delayed(Duration(milliseconds: 250)).then((value) {
         Navigator.of(context).pop();
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AddList()));
-      },
+            context, MaterialPageRoute(builder: (context) => window));
+      });
+    }
+
+    Widget addList = InkWell(
+      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+      child: ListTile(
+        leading: Icon(Icons.add_circle_outline),
+        title: Text(FlutterI18n.translate(context, "add_list")),
+      ),
+      onTap: () => openWindow(AddList()),
+    );
+
+    Widget help = InkWell(
+      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+      child: ListTile(
+        leading: Icon(Icons.info_outline),
+        title: Text(FlutterI18n.translate(context, "help")),
+      ),
+      onTap: () => openWindow(HelpWindow()),
+    );
+
+    Widget dividerLine = Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Divider( height: 8.0,),
     );
     return Column(
-      children: listItems + [addList],
-      //children: listItems+listItems+listItems+listItems+listItems+listItems+listItems+listItems+listItems + [addList],
+      children: listItems + [addList, dividerLine, help],
     );
   }
 
@@ -164,7 +172,6 @@ class MyDrawer extends StatelessWidget {
     }
 
     return InkWell(
-      splashColor: Colors.pink[200],
       borderRadius: BorderRadius.all(Radius.circular(20.0)),
       child: ListTile(
         leading: Icon(Icons.list),
@@ -349,13 +356,13 @@ class PasswordIcons extends StatelessWidget {
       height: MediaQuery.of(context).size.width * 0.15,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
-        color: Colors.pink[100],
-        border: new Border.all(color: Colors.pink[700], width: 2.0),
+        color: Colors.green[100],
+        border: new Border.all(color: Colors.green[700], width: 2.0),
         shape: BoxShape.circle,
       ),
       child: Icon(
         Icons.android,
-        color: Colors.pink[100],
+        color: Colors.green[100],
         size: MediaQuery.of(context).size.width * 0.10,
       ),
     );

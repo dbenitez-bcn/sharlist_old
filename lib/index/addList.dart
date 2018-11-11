@@ -220,7 +220,7 @@ class _AddListBodyState extends State<AddListBody> {
             padding: const EdgeInsets.only(top: 8.0),
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.pink, width: 2.0),
+                border: Border.all(color: Theme.of(context).primaryColor, width: 2.0),
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: _buildRowIcons(context),
@@ -234,7 +234,7 @@ class _AddListBodyState extends State<AddListBody> {
               child: Text(
                 FlutterI18n.translate(context, "password"),
                 style: TextStyle(
-                  color: Colors.pink,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 20.0,
                 ),
               ),
@@ -387,7 +387,7 @@ class _AddListBodyState extends State<AddListBody> {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.7,
       child: RaisedButton(
-        color: Colors.pink,
+        color: Theme.of(context).primaryColor,
         child: Text(
           FlutterI18n.translate(context, "create_list"),
           style: TextStyle(
@@ -403,7 +403,7 @@ class _AddListBodyState extends State<AddListBody> {
 
   Widget _buildConnect(BuildContext context) {
     return InkWell(
-      splashColor: Colors.pink[200],
+      splashColor: Colors.teal[200],
       borderRadius: BorderRadius.all(Radius.circular(5.0)),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.7,

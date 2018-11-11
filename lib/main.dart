@@ -24,12 +24,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     createDb();
     return new MaterialApp(
-      title: 'Onlist',
+      title: 'Home list',
+      debugShowCheckedModeBanner: false,
       theme: new ThemeData(
-        primarySwatch: Colors.pink,
-        //primarySwatch: Colors.green
-        //primaryColor: Colors.limeAccent[400],
-        //primaryColorLight: Color(0xfffdff58)
+        primarySwatch: Colors.teal,
+        splashColor: Colors.teal[200]
       ),
       home: _myHome(context),
       localizationsDelegates: [
@@ -51,17 +50,14 @@ class MyApp extends StatelessWidget {
   Widget _myHome(BuildContext context) {
     return new FutureBuilder<bool>(
       future: firstTime(),
-      builder:
-          (BuildContext context, AsyncSnapshot<bool> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:
             return _loading(context);
           default:
             if (!snapshot.hasError) {
-              return snapshot.data
-                  ? Tutorial()
-                  : Index();
+              return snapshot.data ? Tutorial() : Index();
             } else {
               return new Text("Error :(");
             }
