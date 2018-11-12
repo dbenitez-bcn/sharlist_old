@@ -79,3 +79,7 @@ flutter:
     - family: icomoon
       fonts:
         - asset: assets/fonts/icomoon.ttf
+        - asset: assets/fonts/brush_font.ttf
+    - family: brush
+      fonts:
+        - asset: assets/fonts/brush_font.ttf

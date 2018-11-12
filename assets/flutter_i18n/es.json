@@ -47,5 +47,9 @@
   "answare_four":"Puedes encontrar la contraseña de una lista a la que estés conectad@ desde el menú principal. Allí verás la lista actual a la que estás conectad@ y su contraseña.",
   "share":"Compartir",
   "share_text":"Comparte Home list con tus contactos",
-  "shareApp":"¡Qué fácil es hacer la compra con Home List! Descargate la app ahora y empieza a tener toda la familia conectada. \nAndroid: https://www.android.com\niPhone: https://www.apple.com"
+  "shareApp":"¡Qué fácil es hacer la compra con Home List! Descargate la app ahora y empieza a tener toda la familia conectada. \nAndroid: https://www.android.com\niPhone: https://www.apple.com",
+  "tutorial_one":"Un rápido tutorial...\nPulsa el botón o desliza el dedo.",
+  "tutorial_two":"Añade listas desde el menú.",
+  "tutorial_three":"Añade productos con el botón.",
+  "tutorial_four":"Desliza cuando tengas el producto comprado."
 }

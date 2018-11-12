@@ -3,15 +3,15 @@ import 'package:scoped_model/scoped_model.dart';
 
 class TutorialModel extends Model {
   bool twoButtons = true;
+  int currentPage = 0;
   final pageController = PageController(
     initialPage: 0,
   );
 
   void nextPageModel() {
-    var newPage = pageController.page.round() + 1;
     pageController.nextPage(
         duration: Duration(milliseconds: 500), curve: Curves.ease);
-    changePage(newPage);
+    changePage(pageController.page.round());
   }
 
   void changeButtons() {
@@ -20,11 +20,13 @@ class TutorialModel extends Model {
   }
 
   void changePage(int currentPage) {
-    if (currentPage == 2)
+    currentPage = pageController.page.round();
+    if (currentPage == 6)
       twoButtons = false;
     else {
       twoButtons = true;
     }
+    print(currentPage);
     notifyListeners();
   }
 }
