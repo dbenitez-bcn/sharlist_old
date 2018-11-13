@@ -381,7 +381,7 @@ class _AddListBodyState extends State<AddListBody> {
   }
 
   List<Widget> _buttons(BuildContext context) {
-    return [_buildCreate(context), _buildConnect(context)];
+    return [_buildCreate(context),SizedBox(height: 8.0,), _buildConnect(context)];
   }
 
   Widget _buildCreate(BuildContext context) {
@@ -408,6 +408,31 @@ class _AddListBodyState extends State<AddListBody> {
       borderRadius: BorderRadius.all(Radius.circular(5.0)),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.7,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(color: Theme.of(context).primaryColor, width: 2.0),
+            borderRadius: BorderRadius.all(Radius.circular(3.0)),
+          ),
+          child: Center(
+            child: Text(
+              FlutterI18n.translate(context, "conect_list"),
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        firstStep(false);
+      },
+    );
+    /*
+    return InkWell(
+      splashColor: Colors.teal[200],
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.7,
         child: FlatButton(
           onPressed: null,
           child: Text(
@@ -420,6 +445,8 @@ class _AddListBodyState extends State<AddListBody> {
         firstStep(false);
       },
     );
+
+    */
   }
 
   List<Widget> _loadingBuilder(BuildContext context) {
