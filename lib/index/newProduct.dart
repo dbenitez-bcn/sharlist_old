@@ -66,6 +66,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
                   setState(() {});
                 },
                 controller: tfName,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   labelText: FlutterI18n.translate(context, "name"),
                   labelStyle: TextStyle(fontSize: 28.0),
@@ -79,8 +80,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
               padding: const EdgeInsets.all(16.0),
               child: TextField(
                 controller: tfDesc,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   labelText: FlutterI18n.translate(context, "descripcion"),
                   labelStyle: TextStyle(fontSize: 28.0),

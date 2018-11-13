@@ -250,6 +250,7 @@ class _AddListBodyState extends State<AddListBody> {
       padding: const EdgeInsets.all(16.0),
       child: TextFormField(
         controller: tfName,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           labelText: FlutterI18n.translate(context, "name"),
           labelStyle: TextStyle(fontSize: 28.0),
