@@ -292,7 +292,7 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.meat,
         color: Colors.red,
-        size: DRAWER_WIDTH * 0.15,
+        size: DRAWER_WIDTH * 0.13,
       ),
     );
   }
@@ -310,7 +310,7 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.vegetable,
         color: Colors.lightGreenAccent[700],
-        size: DRAWER_WIDTH * 0.15,
+        size: DRAWER_WIDTH * 0.13,
       ),
     );
   }
@@ -328,7 +328,7 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.milk,
         color: Colors.black,
-        size: DRAWER_WIDTH * 0.15,
+        size: DRAWER_WIDTH * 0.13,
       ),
     );
   }
@@ -346,7 +346,7 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.fish,
         color: Colors.lightBlue,
-        size: DRAWER_WIDTH * 0.15,
+        size: DRAWER_WIDTH * 0.13,
       ),
     );
   }
@@ -364,7 +364,7 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icons.android,
         color: Colors.green[100],
-        size: DRAWER_WIDTH * 0.15,
+        size: DRAWER_WIDTH * 0.13,
       ),
     );
   }
