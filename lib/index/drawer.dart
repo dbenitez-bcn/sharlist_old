@@ -7,6 +7,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const double DRAWER_WIDTH = 304.0;
+
 class MyDrawer extends StatelessWidget {
   String path;
   Database database;
@@ -29,7 +31,7 @@ class MyDrawer extends StatelessWidget {
     path = join(await getDatabasesPath(), "onlist.db");
     database = await openDatabase(path);
     listItems = await database.rawQuery('SELECT * FROM Lista').then(
-        (data) => data.map((list) => _buildListItem(context, list)).toList());
+            (data) => data.map((list) => _buildListItem(context, list)).toList());
     String currList = await SharedPreferences.getInstance()
         .then((data) => data.getString('currList'));
     if (currList != null)
@@ -106,7 +108,7 @@ class MyDrawer extends StatelessWidget {
       child: Text(
         mainList.name,
         style:
-            TextStyle(color: Colors.white, fontSize: 34.0, letterSpacing: -0.5),
+        TextStyle(color: Colors.white, fontSize: 34.0, letterSpacing: -0.5),
       ),
     );
   }
@@ -153,7 +155,7 @@ class MyDrawer extends StatelessWidget {
     void deteleList() async {
       await database.rawDelete("DELETE FROM Lista WHERE id = ?", [lista.id]);
       List<Map<String, dynamic>> listas =
-          await database.rawQuery('SELECT * FROM Lista');
+      await database.rawQuery('SELECT * FROM Lista');
       if (listas.length > 0) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         if (preferences.getString('currList') == lista.name) {
@@ -185,24 +187,24 @@ class MyDrawer extends StatelessWidget {
         showDialog<String>(
             context: context,
             builder: (BuildContext context) => AlertDialog(
-                  title: Text(FlutterI18n.translate(context, "detele_list")),
-                  content: Text(
-                      FlutterI18n.translate(context, "detele_list_content")),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text(
-                        FlutterI18n.translate(context, "cancel"),
-                      ),
-                      onPressed: () => Navigator.pop(context, "cancel"),
-                    ),
-                    FlatButton(
-                      child: Text(
-                        FlutterI18n.translate(context, "ok"),
-                      ),
-                      onPressed: () => Navigator.pop(context, "ok"),
-                    ),
-                  ],
-                )).then<String>((desicion) {
+              title: Text(FlutterI18n.translate(context, "detele_list")),
+              content: Text(
+                  FlutterI18n.translate(context, "detele_list_content")),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(
+                    FlutterI18n.translate(context, "cancel"),
+                  ),
+                  onPressed: () => Navigator.pop(context, "cancel"),
+                ),
+                FlatButton(
+                  child: Text(
+                    FlutterI18n.translate(context, "ok"),
+                  ),
+                  onPressed: () => Navigator.pop(context, "ok"),
+                ),
+              ],
+            )).then<String>((desicion) {
           if (desicion == "ok") deteleList();
         });
       },
@@ -214,8 +216,8 @@ class MyDrawer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         SizedBox(
-            height: MediaQuery.of(context).size.width * 0.3,
-            width: MediaQuery.of(context).size.width * 0.3,
+            height: DRAWER_WIDTH * 0.5,
+            width: DRAWER_WIDTH * 0.5,
             child: CircularProgressIndicator(
               strokeWidth: 6.0,
             )),
@@ -245,7 +247,6 @@ class Lista {
 
 class PasswordIcons extends StatelessWidget {
   final List<int> pass;
-
   PasswordIcons({this.pass});
 
   @override
@@ -280,8 +281,8 @@ class PasswordIcons extends StatelessWidget {
 
   Widget _buildMeat(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.15,
-      height: MediaQuery.of(context).size.width * 0.15,
+      width: DRAWER_WIDTH * 0.20,
+      height: DRAWER_WIDTH * 0.20,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.red[100],
@@ -291,15 +292,15 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.meat,
         color: Colors.red,
-        size: MediaQuery.of(context).size.width * 0.10,
+        size: DRAWER_WIDTH * 0.15,
       ),
     );
   }
 
   Widget _buildVegetable(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.15,
-      height: MediaQuery.of(context).size.width * 0.15,
+      width: DRAWER_WIDTH * 0.20,
+      height: DRAWER_WIDTH * 0.20,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.lightGreenAccent[100],
@@ -309,15 +310,15 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.vegetable,
         color: Colors.lightGreenAccent[700],
-        size: MediaQuery.of(context).size.width * 0.10,
+        size: DRAWER_WIDTH * 0.15,
       ),
     );
   }
 
   Widget _buildMilk(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.15,
-      height: MediaQuery.of(context).size.width * 0.15,
+      width: DRAWER_WIDTH * 0.20,
+      height: DRAWER_WIDTH * 0.20,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -327,15 +328,15 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.milk,
         color: Colors.black,
-        size: MediaQuery.of(context).size.width * 0.10,
+        size: DRAWER_WIDTH * 0.15,
       ),
     );
   }
 
   Widget _buildFish(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.15,
-      height: MediaQuery.of(context).size.width * 0.15,
+      width: DRAWER_WIDTH * 0.20,
+      height: DRAWER_WIDTH * 0.20,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.lightBlue[100],
@@ -345,15 +346,15 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icomoon.fish,
         color: Colors.lightBlue,
-        size: MediaQuery.of(context).size.width * 0.10,
+        size: DRAWER_WIDTH * 0.15,
       ),
     );
   }
 
   Widget _buildNone(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.15,
-      height: MediaQuery.of(context).size.width * 0.15,
+      width: DRAWER_WIDTH * 0.20,
+      height: DRAWER_WIDTH * 0.20,
       alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         color: Colors.green[100],
@@ -363,7 +364,7 @@ class PasswordIcons extends StatelessWidget {
       child: Icon(
         Icons.android,
         color: Colors.green[100],
-        size: MediaQuery.of(context).size.width * 0.10,
+        size: DRAWER_WIDTH * 0.15,
       ),
     );
   }
