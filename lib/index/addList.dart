@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/icons/icomoon.dart';
+import 'package:on_list/utils/admob.dart';
 import 'package:path/path.dart' as flutPath;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
@@ -203,7 +204,8 @@ class _AddListBodyState extends State<AddListBody> {
                   _nameField(context),
                   _passwordField(context),
                 ] +
-                (conecting ? _loadingBuilder(context) : _buttons(context)),
+                (conecting ? _loadingBuilder(context) : _buttons(context))
+            +[bannerSeparator(context)],
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:on_list/utils/admob.dart';
 
 class FaqPage extends StatelessWidget {
   @override
@@ -17,6 +18,7 @@ class FaqPage extends StatelessWidget {
         _buildQuestion(context, FlutterI18n.translate(context, "question_two"), FlutterI18n.translate(context, "answare_two")),
         _buildQuestion(context, FlutterI18n.translate(context, "question_three"), FlutterI18n.translate(context, "answare_three")),
         _buildQuestion(context, FlutterI18n.translate(context, "question_four"), FlutterI18n.translate(context, "answare_four")),
+        bannerSeparator(context),
       ],
     );
   }

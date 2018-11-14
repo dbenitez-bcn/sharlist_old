@@ -70,7 +70,7 @@ class _ListProductsState extends State<ListProducts> {
       onDismissed: (direction) {
         if (record.reference.delete() != null)
           Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(record.name.toUpperCase() + " comprado!")));
+              content: Text(record.name.toUpperCase() + " ${FlutterI18n.translate(context, "bought")}!")));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

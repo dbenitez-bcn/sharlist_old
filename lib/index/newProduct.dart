@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:on_list/utils/admob.dart';
 
 class AddProduct extends StatelessWidget {
   final String lista;
@@ -142,6 +143,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
                       ),
                     ),
             ),
+            bannerSeparator(context),
           ],
         ),
       ),

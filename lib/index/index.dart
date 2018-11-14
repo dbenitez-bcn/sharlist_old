@@ -6,12 +6,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import 'package:on_list/utils/admob.dart';
 
-class Index extends StatelessWidget {
+class Index extends StatefulWidget {
 
+  @override
+  IndexState createState() {
+    return new IndexState();
+  }
+}
+
+class IndexState extends State<Index> {
+  BannerAd myBanner;
   Future<List<dynamic>> getData(context) async{
     return [await haveLists(), await getCurrList(context)];
   }
+
   Future<bool> haveLists() async{
     String path = join(await getDatabasesPath(), "onlist.db");
     Database database = await openDatabase(path);
@@ -26,6 +37,19 @@ class Index extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    FirebaseAdMob.instance.initialize(appId: getAppId());
+    myBanner = buildBanner()..load();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    myBanner?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new FutureBuilder<List<dynamic>>(
       future: getData(context),
@@ -37,6 +61,7 @@ class Index extends StatelessWidget {
             return _loading(context);
           default:
             if (!snapshot.hasError) {
+              myBanner..load()..show();
               return IndexApp(title: snapshot.data[1], haveList: snapshot.data[0],);
             } else {
               return new Text("Error :(");
@@ -95,6 +120,7 @@ class _IndexAppState extends State<IndexApp> {
       ),
       body: widget.haveList ? ListProducts(list: widget.title, setCanShow: setCanShow,) : NoLists(),
       floatingActionButton: widget.haveList && widget.canShow ? AddFab(lista: widget.title,) : null,
+      bottomNavigationBar: bannerSeparator(context),
     );
   }
 

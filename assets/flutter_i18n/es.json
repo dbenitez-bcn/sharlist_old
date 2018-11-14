@@ -51,5 +51,6 @@
   "tutorial_one":"Un rápido tutorial...\nPulsa el botón o desliza el dedo.",
   "tutorial_two":"Añade listas desde el menú.",
   "tutorial_three":"Añade productos con el botón.",
-  "tutorial_four":"Desliza cuando tengas el producto comprado."
+  "tutorial_four":"Desliza cuando tengas el producto comprado.",
+  "bought":"comprado"
 }

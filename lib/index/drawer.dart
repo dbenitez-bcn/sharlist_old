@@ -3,6 +3,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/index/addList.dart';
 import 'package:on_list/icons/icomoon.dart';
 import 'package:on_list/index/help.dart';
+import 'package:on_list/utils/admob.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -144,8 +145,9 @@ class MyDrawer extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       child: Divider( height: 8.0,),
     );
+
     return Column(
-      children: listItems + [addList, dividerLine, help],
+      children: listItems + [addList, dividerLine, help,bannerSeparator(context)],
     );
   }
 

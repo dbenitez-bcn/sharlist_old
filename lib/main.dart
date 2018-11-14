@@ -6,43 +6,7 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:on_list/tutorial/tutorial.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:firebase_admob/firebase_admob.dart';
-
-MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  keywords: <String>['flutterio', 'beautiful apps'],
-  contentUrl: 'https://flutter.io',
-  birthday: DateTime.now(),
-  childDirected: false,
-  designedForFamilies: false,
-  gender: MobileAdGender.male,
-  // or MobileAdGender.female, MobileAdGender.unknown
-  testDevices: <String>[], // Android emulators are considered test devices
-);
-
-BannerAd myBanner = BannerAd(
-  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-  // https://developers.google.com/admob/android/test-ads
-  // https://developers.google.com/admob/ios/test-ads
-  adUnitId: BannerAd.testAdUnitId,
-  size: AdSize.smartBanner,
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("BannerAd event is $event");
-  },
-);
-
-InterstitialAd myInterstitial = InterstitialAd(
-  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-  // https://developers.google.com/admob/android/test-ads
-  // https://developers.google.com/admob/ios/test-ads
-  adUnitId: InterstitialAd.testAdUnitId,
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("InterstitialAd event is $event");
-  },
-);
-
-void main() => runApp(new Admob());
+void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
   void createDb() async {
@@ -50,9 +14,9 @@ class MyApp extends StatelessWidget {
     String path = join(databasesPath, "onlist.db");
     Database database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-      await db.execute(
-          "CREATE TABLE Lista (id INTEGER PRIMARY KEY, name TEXT, password BLOB)");
-    });
+          await db.execute(
+              "CREATE TABLE Lista (id INTEGER PRIMARY KEY, name TEXT, password BLOB)");
+        });
   }
 
   @override
@@ -110,52 +74,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class Admob extends StatefulWidget {
-  @override
-  _AdmobState createState() => new _AdmobState();
-}
-
-class _AdmobState extends State<Admob> {
-  @override
-  void initState() {
-    FirebaseAdMob.instance
-        .initialize(appId: "ca-app-pub-9458621217720467~3725135245");
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    myBanner
-      ..load()
-      ..show(
-        anchorOffset: 60.0,
-        anchorType: AnchorType.bottom,
-      );
-    return MaterialApp(
-      title: 'Home list',
-      debugShowCheckedModeBanner: false,
-      theme: new ThemeData(
-          primarySwatch: Colors.teal, splashColor: Colors.teal[200]),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Admob?"),
-        ),
-        body: Container(
-          child: Text("Huaaaa"),
-        ),
-      ),
-      localizationsDelegates: [
-        FlutterI18nDelegate(false, 'en'),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ],
-      routes: <String, WidgetBuilder>{
-        '/index': (BuildContext context) => Index(),
-      },
     );
   }
 }

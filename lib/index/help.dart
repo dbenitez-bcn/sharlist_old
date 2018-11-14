@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/index/faqPage.dart';
+import 'package:on_list/utils/admob.dart';
 import 'package:package_info/package_info.dart';
 import 'dart:io' show Platform;
 import 'package:url_launcher/url_launcher.dart';
@@ -99,7 +100,8 @@ class HelpWindow extends StatelessWidget {
                     subtitle:
                         Text(FlutterI18n.translate(context, "share_text")),
                     onTap: shareApp,
-                  )
+                  ),
+                  bannerSeparator(context)
                 ],
               );
             return Text("Error :(");
