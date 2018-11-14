@@ -31,7 +31,7 @@ class MyDrawer extends StatelessWidget {
   Future<bool> loadData(BuildContext context) async {
     path = join(await getDatabasesPath(), "onlist.db");
     database = await openDatabase(path);
-    listItems = await database.rawQuery('SELECT * FROM Lista').then(
+    listItems = await database.rawQuery('SELECT * FROM Lista ORDER BY name ASC ').then(
             (data) => data.map((list) => _buildListItem(context, list)).toList());
     String currList = await SharedPreferences.getInstance()
         .then((data) => data.getString('currList'));
