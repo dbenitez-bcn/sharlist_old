@@ -27,7 +27,11 @@ dependencies:
   package_info: ^0.3.2
   url_launcher: ^4.0.1
   share: ^0.5.3
+<<<<<<< HEAD
   firebase_admob: ^0.5.5
+=======
+  #firebase_admob: ^0.7.0
+>>>>>>> 2b52b8b9d88d726e208e83943e2cb10c2b7727b7
 
 dev_dependencies:
   flutter_test:
