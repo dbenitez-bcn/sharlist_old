@@ -12,7 +12,7 @@ String getAppId(){
   else if (Platform.isAndroid) return 'ca-app-pub-9458621217720467~9539008203';
   return null;
 }
-String getBannerId(){
+String _getBannerId(){
   if (Platform.isIOS) return 'ca-app-pub-9458621217720467/2479093066';
   else if (Platform.isAndroid) return 'ca-app-pub-9458621217720467/4771280148';
   return null;
@@ -20,7 +20,7 @@ String getBannerId(){
 
 BannerAd buildBanner(){
   return BannerAd(
-    adUnitId: BannerAd.testAdUnitId,
+    adUnitId: _getBannerId(),
     size: AdSize.banner,
     targetingInfo: targetingInfo,
   );

@@ -12,7 +12,12 @@ class _TutorialState extends State<Tutorial> {
   final pageController = PageController(
     initialPage: 0,
   );
-  final List<String> textTutorials = ["tutorial_one","tutorial_two","tutorial_three","tutorial_four"];
+  final List<String> textTutorials = [
+    "tutorial_one",
+    "tutorial_two",
+    "tutorial_three",
+    "tutorial_four"
+  ];
 
   void nextPageModel() {
     pageController.nextPage(
@@ -20,20 +25,27 @@ class _TutorialState extends State<Tutorial> {
     changePage(pageController.page.round());
   }
 
-  void changePage(int page){
+  void changePage(int page) {
     currentPage = page;
     setState(loadPoints);
   }
+
   List<Widget> points = [];
 
   void loadPoints() {
-    points=[];
+    points = [];
     for (var i = 0; i < 4; i++) {
       if (i != currentPage)
         points.add(_buildPointOff(context));
       else
         points.add(_buildPointOn(context));
     }
+  }
+
+  void toApp() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool("firstTime", false);
+    Navigator.pushReplacementNamed(context, '/index');
   }
 
   @override
@@ -54,7 +66,7 @@ class _TutorialState extends State<Tutorial> {
     );
   }
 
-  Widget pageViewPictures(BuildContext context){
+  Widget pageViewPictures(BuildContext context) {
     return SizedBox.expand(
       child: Container(
         color: Colors.teal[700],
@@ -87,22 +99,32 @@ class _TutorialState extends State<Tutorial> {
     );
   }
 
-  Widget _buildUi(BuildContext context){
+  Widget _buildUi(BuildContext context) {
     return SafeArea(
       child: SizedBox.expand(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(FlutterI18n.translate(context, "appName"), style: TextStyle(color: Colors.white, fontSize: 80.0, fontFamily: 'brush')),
+            Text(FlutterI18n.translate(context, "appName"),
+                style: TextStyle(
+                    color: Colors.white, fontSize: 80.0, fontFamily: 'brush')),
             Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(FlutterI18n.translate(context, textTutorials[currentPage]), style: TextStyle(color: Colors.white, fontSize: 24.0, fontFamily: 'brush', ), textAlign: TextAlign.center,),
-              ),
-              currentPage<3? twoButtons(context) : EmpezarApp(),
-              _buildPoints(context),
-            ],
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    FlutterI18n.translate(context, textTutorials[currentPage]),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0,
+                      fontFamily: 'brush',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                currentPage < 3 ? twoButtons(context) : empezarApp(context),
+                _buildPoints(context),
+              ],
             )
           ],
         ),
@@ -118,12 +140,7 @@ class _TutorialState extends State<Tutorial> {
           splashColor: Colors.transparent,
           textColor: Colors.white,
           child: Text(FlutterI18n.translate(context, "skip_tutorial")),
-          onPressed: () async {
-            SharedPreferences preferences =
-            await SharedPreferences.getInstance();
-            await preferences.setBool("firstTime", false);
-            Navigator.pushReplacementNamed(context, '/index');
-          },
+          onPressed: toApp,
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.4,
@@ -153,6 +170,20 @@ class _TutorialState extends State<Tutorial> {
           ),
         )
       ],
+    );
+  }
+
+  Widget empezarApp(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.7,
+      child: new RaisedButton(
+        color: Colors.white,
+        child: Text(
+          FlutterI18n.translate(context, "start_app"),
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+        onPressed: toApp,
+      ),
     );
   }
 
@@ -190,27 +221,6 @@ class _TutorialState extends State<Tutorial> {
           color: Colors.grey[400],
           shape: BoxShape.circle,
         ),
-      ),
-    );
-  }
-}
-
-class EmpezarApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.7,
-      child: new RaisedButton(
-        color: Colors.white,
-        child: Text(
-          FlutterI18n.translate(context, "start_app"),
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
-        onPressed: () async {
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          await preferences.setBool("firstTime", false);
-          Navigator.pushReplacementNamed(context, '/index');
-        },
       ),
     );
   }

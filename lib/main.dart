@@ -9,9 +9,17 @@ import 'package:sqflite/sqflite.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:on_list/utils/admob.dart';
 
-void main() => runApp(new Admob());
+void main() => runApp(new MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  MyAppState createState() {
+    return new MyAppState();
+  }
+}
+
+class MyAppState extends State<MyApp> {
+  BannerAd myBanner;
   void createDb() async {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, "onlist.db");
@@ -23,8 +31,21 @@ class MyApp extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    FirebaseAdMob.instance.initialize(appId: getAppId());
+    myBanner = buildBanner()..load();
     createDb();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    myBanner?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Home list',
       debugShowCheckedModeBanner: false,
@@ -57,6 +78,7 @@ class MyApp extends StatelessWidget {
             return _loading(context);
           default:
             if (!snapshot.hasError) {
+              if(!snapshot.data)myBanner..load()..show();
               return snapshot.data ? Tutorial() : Index();
             } else {
               return new Text("Error :(");
@@ -77,55 +99,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class Admob extends StatefulWidget {
-  @override
-  _AdmobState createState() => new _AdmobState();
-}
-
-class _AdmobState extends State<Admob> {
-  BannerAd myBanner;
-  @override
-  void initState() {
-    FirebaseAdMob.instance.initialize(appId: getAppId());
-    myBanner = buildBanner()..load();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    myBanner?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    myBanner
-      ..load()
-      ..show(
-      );
-    return MaterialApp(
-      title: 'Home list',
-      debugShowCheckedModeBanner: false,
-      theme: new ThemeData(
-          primarySwatch: Colors.teal, splashColor: Colors.teal[200]),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Admob?"),
-        ),
-        body: Index(),
-      ),
-      localizationsDelegates: [
-        FlutterI18nDelegate(false, 'en'),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ],
-      routes: <String, WidgetBuilder>{
-        '/index': (BuildContext context) => Index(),
-      },
     );
   }
 }

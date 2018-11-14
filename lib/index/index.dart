@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:on_list/utils/admob.dart';
 
 class Index extends StatefulWidget {
@@ -18,7 +17,6 @@ class Index extends StatefulWidget {
 }
 
 class IndexState extends State<Index> {
-  BannerAd myBanner;
   Future<List<dynamic>> getData(context) async{
     return [await haveLists(), await getCurrList(context)];
   }
@@ -37,19 +35,6 @@ class IndexState extends State<Index> {
   }
 
   @override
-  void initState() {
-    FirebaseAdMob.instance.initialize(appId: getAppId());
-    myBanner = buildBanner()..load();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    myBanner?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return new FutureBuilder<List<dynamic>>(
       future: getData(context),
@@ -61,7 +46,6 @@ class IndexState extends State<Index> {
             return _loading(context);
           default:
             if (!snapshot.hasError) {
-              myBanner..load()..show();
               return IndexApp(title: snapshot.data[1], haveList: snapshot.data[0],);
             } else {
               return new Text("Error :(");
@@ -113,6 +97,7 @@ class _IndexAppState extends State<IndexApp> {
 
   @override
   Widget build(BuildContext context) {
+    //myBanner..load()..show();
     return Scaffold(
       drawer: _buildDrawer(context),
       appBar: AppBar(
