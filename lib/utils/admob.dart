@@ -9,14 +9,19 @@ MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
 
 String getAppId(){
   if (Platform.isIOS) return 'ca-app-pub-9458621217720467~3725135245';
-  else if (Platform.isAndroid) return 'ca-app-pub-9458621217720467~3725135245';
+  else if (Platform.isAndroid) return 'ca-app-pub-9458621217720467~9539008203';
+  return null;
+}
+String getBannerId(){
+  if (Platform.isIOS) return 'ca-app-pub-9458621217720467/2479093066';
+  else if (Platform.isAndroid) return 'ca-app-pub-9458621217720467/4771280148';
   return null;
 }
 
 BannerAd buildBanner(){
   return BannerAd(
     adUnitId: BannerAd.testAdUnitId,
-    size: AdSize.smartBanner,
+    size: AdSize.banner,
     targetingInfo: targetingInfo,
   );
 }

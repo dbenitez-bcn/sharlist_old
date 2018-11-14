@@ -6,7 +6,10 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:on_list/tutorial/tutorial.dart';
 import 'package:sqflite/sqflite.dart';
-void main() => runApp(new MyApp());
+import 'package:firebase_admob/firebase_admob.dart';
+import 'package:on_list/utils/admob.dart';
+
+void main() => runApp(new Admob());
 
 class MyApp extends StatelessWidget {
   void createDb() async {
@@ -74,6 +77,55 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class Admob extends StatefulWidget {
+  @override
+  _AdmobState createState() => new _AdmobState();
+}
+
+class _AdmobState extends State<Admob> {
+  BannerAd myBanner;
+  @override
+  void initState() {
+    FirebaseAdMob.instance.initialize(appId: getAppId());
+    myBanner = buildBanner()..load();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    myBanner?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    myBanner
+      ..load()
+      ..show(
+      );
+    return MaterialApp(
+      title: 'Home list',
+      debugShowCheckedModeBanner: false,
+      theme: new ThemeData(
+          primarySwatch: Colors.teal, splashColor: Colors.teal[200]),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Admob?"),
+        ),
+        body: Index(),
+      ),
+      localizationsDelegates: [
+        FlutterI18nDelegate(false, 'en'),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      routes: <String, WidgetBuilder>{
+        '/index': (BuildContext context) => Index(),
+      },
     );
   }
 }
