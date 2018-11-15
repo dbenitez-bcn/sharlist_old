@@ -4,6 +4,7 @@ import 'package:on_list/index/addList.dart';
 import 'package:on_list/icons/icomoon.dart';
 import 'package:on_list/index/help.dart';
 import 'package:on_list/utils/admob.dart';
+import 'package:on_list/utils/dialogs.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,8 +32,10 @@ class MyDrawer extends StatelessWidget {
   Future<bool> loadData(BuildContext context) async {
     path = join(await getDatabasesPath(), "onlist.db");
     database = await openDatabase(path);
-    listItems = await database.rawQuery('SELECT * FROM Lista ORDER BY name ASC ').then(
-            (data) => data.map((list) => _buildListItem(context, list)).toList());
+    listItems = await database
+        .rawQuery('SELECT * FROM Lista ORDER BY name ASC ')
+        .then((data) =>
+            data.map((list) => _buildListItem(context, list)).toList());
     String currList = await SharedPreferences.getInstance()
         .then((data) => data.getString('currList'));
     if (currList != null)
@@ -109,7 +112,7 @@ class MyDrawer extends StatelessWidget {
       child: Text(
         mainList.name,
         style:
-        TextStyle(color: Colors.white, fontSize: 34.0, letterSpacing: -0.5),
+            TextStyle(color: Colors.white, fontSize: 34.0, letterSpacing: -0.5),
       ),
     );
   }
@@ -143,11 +146,14 @@ class MyDrawer extends StatelessWidget {
 
     Widget dividerLine = Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: Divider( height: 8.0,),
+      child: Divider(
+        height: 8.0,
+      ),
     );
 
     return Column(
-      children: listItems + [addList, dividerLine, help,bannerSeparator(context)],
+      children:
+          listItems + [addList, dividerLine, help, bannerSeparator(context)],
     );
   }
 
@@ -157,7 +163,7 @@ class MyDrawer extends StatelessWidget {
     void deteleList() async {
       await database.rawDelete("DELETE FROM Lista WHERE id = ?", [lista.id]);
       List<Map<String, dynamic>> listas =
-      await database.rawQuery('SELECT * FROM Lista');
+          await database.rawQuery('SELECT * FROM Lista');
       if (listas.length > 0) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         if (preferences.getString('currList') == lista.name) {
@@ -187,26 +193,9 @@ class MyDrawer extends StatelessWidget {
       },
       onLongPress: () {
         showDialog<String>(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text(FlutterI18n.translate(context, "detele_list")),
-              content: Text(
-                  FlutterI18n.translate(context, "detele_list_content")),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    FlutterI18n.translate(context, "cancel"),
-                  ),
-                  onPressed: () => Navigator.pop(context, "cancel"),
-                ),
-                FlatButton(
-                  child: Text(
-                    FlutterI18n.translate(context, "ok"),
-                  ),
-                  onPressed: () => Navigator.pop(context, "ok"),
-                ),
-              ],
-            )).then<String>((desicion) {
+                context: context,
+                builder: (BuildContext context) => DeleteListDialog())
+            .then<String>((desicion) {
           if (desicion == "ok") deteleList();
         });
       },
@@ -249,6 +238,7 @@ class Lista {
 
 class PasswordIcons extends StatelessWidget {
   final List<int> pass;
+
   PasswordIcons({this.pass});
 
   @override

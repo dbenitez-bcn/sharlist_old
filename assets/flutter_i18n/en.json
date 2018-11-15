@@ -52,5 +52,6 @@
   "tutorial_two":"Add lists from the menu.",
   "tutorial_three":"Add products with the button.",
   "tutorial_four":"Slide when you have the purchased product.",
-  "bought":"bought"
+  "bought":"bought",
+  "update_record":"Modify product"
 }

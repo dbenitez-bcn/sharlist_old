@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:on_list/utils/dialogs.dart';
 
 class ListProducts extends StatefulWidget {
   final String list;
   final Function setCanShow;
+
   ListProducts({this.list, this.setCanShow});
 
   @override
@@ -14,15 +16,19 @@ class ListProducts extends StatefulWidget {
 
 class _ListProductsState extends State<ListProducts> {
   ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     scrollController.addListener(listener);
     super.initState();
   }
 
-  void listener(){
-    if(scrollController.position.userScrollDirection == ScrollDirection.forward)widget.setCanShow(true);
-    else widget.setCanShow(false);
+  void listener() {
+    if (scrollController.position.userScrollDirection ==
+        ScrollDirection.forward)
+      widget.setCanShow(true);
+    else
+      widget.setCanShow(false);
   }
 
   @override
@@ -63,14 +69,19 @@ class _ListProductsState extends State<ListProducts> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
-
+    Map<dynamic, String> updateRecord(data){
+      if(data['accion']=="ok"){
+        record.reference.updateData({"name":data['nameValue'], "description":data['descValue']});
+      }
+    }
     return Dismissible(
       key: ValueKey(record.name),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
         if (record.reference.delete() != null)
           Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(record.name.toUpperCase() + " ${FlutterI18n.translate(context, "bought")}!")));
+              content: Text(record.name.toUpperCase() +
+                  " ${FlutterI18n.translate(context, "bought")}!")));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -83,8 +94,12 @@ class _ListProductsState extends State<ListProducts> {
             onTap: () =>
                 record.reference.updateData({'quantity': record.quantity + 1}),
             onLongPress: () {
-              if (record.quantity > 1)
-                record.reference.updateData({'quantity': record.quantity - 1});
+              showDialog<Map<dynamic, String>>(
+                      context: context,
+                      builder: (BuildContext context) => UpdateRecordDialog(nameValue: record.name, descValue: record.description,))
+                  .then<Map<dynamic, String>>(updateRecord);
+
+              //if (record.quantity > 1)record.reference.updateData({'quantity': record.quantity - 1});
             },
             title: Text(record.name),
             subtitle: Text(record.description),
