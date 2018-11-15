@@ -48,6 +48,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
       "name": tfName.text,
       "quantity": cantidad,
       "description": tfDesc.text == "" ? tfName.text : tfDesc.text,
+      "ts_date":DateTime.now()
     }).whenComplete(() {
       Navigator.pop(context);
     });

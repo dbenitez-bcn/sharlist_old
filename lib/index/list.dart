@@ -69,11 +69,13 @@ class _ListProductsState extends State<ListProducts> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
-    Map<dynamic, String> updateRecord(data){
-      if(data['accion']=="ok"){
-        record.reference.updateData({"name":data['nameValue'], "description":data['descValue']});
+    Map<dynamic, String> updateRecord(data) {
+      if (data['accion'] == "ok") {
+        record.reference.updateData(
+            {"name": data['nameValue'], "description": data['descValue']});
       }
     }
+
     return Dismissible(
       key: ValueKey(record.name),
       direction: DismissDirection.endToStart,
@@ -95,9 +97,11 @@ class _ListProductsState extends State<ListProducts> {
                 record.reference.updateData({'quantity': record.quantity + 1}),
             onLongPress: () {
               showDialog<Map<dynamic, String>>(
-                      context: context,
-                      builder: (BuildContext context) => UpdateRecordDialog(nameValue: record.name, descValue: record.description,))
-                  .then<Map<dynamic, String>>(updateRecord);
+                  context: context,
+                  builder: (BuildContext context) => UpdateRecordDialog(
+                        nameValue: record.name,
+                        descValue: record.description,
+                      )).then<Map<dynamic, String>>(updateRecord);
 
               //if (record.quantity > 1)record.reference.updateData({'quantity': record.quantity - 1});
             },
@@ -115,21 +119,24 @@ class Record {
   final String name;
   int quantity;
   final String description;
+  final DateTime ts_date;
   final DocumentReference reference;
 
   Record.fromMap(Map<String, dynamic> map, {this.reference})
       : assert(map['name'] != null),
         assert(map['quantity'] != null),
         assert(map['description'] != null),
+        assert(map['ts_date'] != null),
         name = map['name'],
         quantity = map['quantity'],
-        description = map['description'];
+        description = map['description'],
+        ts_date = map['ts_date'];
 
   Record.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
   @override
-  String toString() => "Record<$name: $quantity>";
+  String toString() => "Record: $name x$quantity <$ts_date>";
 }
 
 class NoProducts extends StatelessWidget {
