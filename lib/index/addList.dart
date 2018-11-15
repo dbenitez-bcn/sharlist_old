@@ -419,7 +419,7 @@ class _AddListBodyState extends State<AddListBody> {
           ),
           child: Center(
             child: Text(
-              FlutterI18n.translate(context, "conect_list"),
+              FlutterI18n.translate(context, "already_list"),
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
           ),
