@@ -17,7 +17,7 @@ class HelpWindow extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    const String androidLink= "https://play.google.com/store/apps/details?id=com.logicgear.onlist";
+    const String androidLink= "https://goo.gl/6vEiwD";
     void openUrl(String url) async {
       if (await canLaunch(url)) {
         await launch(url);

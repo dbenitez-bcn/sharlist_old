@@ -47,7 +47,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Home list',
+      title: 'Sharlist',
       debugShowCheckedModeBanner: false,
       theme: new ThemeData(
           primarySwatch: Colors.teal, splashColor: Colors.teal[200]),

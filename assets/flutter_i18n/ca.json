@@ -1,6 +1,6 @@
 {
   "language":"catala",
-  "appName":"Home list",
+  "appName":"Sharlist",
   "skip_tutorial":"Saltar",
   "next":"Següent",
   "new_list":"Nova llista",
@@ -46,8 +46,8 @@
   "question_four":"¿Cómo sé la contraseña de una lista?",
   "answare_four":"Puedes encontrar la contraseña de una lista a la que estés conectad@ desde el menú principal. Allí verás la lista actual a la que estás conectad@ y su contraseña.",
   "share":"Compartir",
-  "share_text":"Comparteix Home list amb els teus contactes",
-  "shareApp":"¡Qué fàcil es fer la compra amb Home list! Descarregatela ja i comença a tindre tota la familia conectada. \nAndroid: https://play.google.com/store/apps/details?id=com.logicgear.onlist\niPhone: https://www.apple.com",
+  "share_text":"Comparteix Sharlist amb els teus contactes",
+  "shareApp":"Que fàcil es organizar-se amb Sharlist! Descarga't l'app ara, crea tantes listes com necesitis i comparteix-la amb qui tu vulguis.\nAndroid: https://goo.gl/6vEiwD\niPhone: https://www.apple.com",
   "tutorial_one":"Un ràpid tutorial...\nClica el botó o llisca el dit.",
   "tutorial_two":"Afegeix llistes desde el menu.",
   "tutorial_three":"Afegeix productes amb el botó.",

@@ -186,7 +186,7 @@ class _AddListBodyState extends State<AddListBody> {
 
   Future<bool> listExist() async {
     QuerySnapshot reference =
-        await Firestore.instance.collection(tfName.text).getDocuments();
+        await Firestore.instance.collection(tfName.text.toLowerCase()).getDocuments();
     if (reference.documents.length > 0)
       return true;
     else
