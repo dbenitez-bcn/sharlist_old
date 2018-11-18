@@ -4,7 +4,7 @@
   "skip_tutorial":"Saltar",
   "next":"Següent",
   "new_list":"Nova llista",
-  "create_list":"Crea llista",
+  "create_list":"Crea nova llista buida",
   "create_new_list":"Crear nova llista",
   "conect_list":"Connectar-se a una llista existent",
   "already_list":"Utilitzar una llista existent",
@@ -53,5 +53,13 @@
   "tutorial_three":"Afegeix productes amb el botó.",
   "tutorial_four":"Llisca quan tinguis el producte compra't",
   "bought":"compra't",
-  "update_record":"Modificar producte"
+  "update_record":"Guardar canvis",
+  "edit_product":"Editar producte",
+  "share_this_list":"Compartir aquesta lista",
+  "share_list":"Compartir lista",
+  "not_able_share":"Afegueix una llista per poder compartir-la.",
+  "list_code":"Codi:",
+  "accept":"D'acord",
+  "copy_code":"Codi copiat",
+  "share_list_text":"Descarrega't Sharlist i uneix-te a la meva lista de la compra:\nAndroid: https://goo.gl/6vEiwD\niPhone: https://www.apple.com\nCodi: "
 }

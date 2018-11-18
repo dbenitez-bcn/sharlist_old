@@ -4,7 +4,7 @@
   "skip_tutorial":"Skip",
   "next":"Next",
   "new_list":"New list",
-  "create_list":"Create list",
+  "create_list":"Create new empty list",
   "create_new_list":"Create a new list",
   "conect_list":"Acces to an existing list",
   "already_list":"Use an existing list",
@@ -53,5 +53,13 @@
   "tutorial_three":"Add products with the button.",
   "tutorial_four":"Slide when you have the purchased product.",
   "bought":"bought",
-  "update_record":"Modify product"
+  "update_record":"Saves changes",
+  "edit_product":"Edit product",
+  "share_this_list":"Share this list",
+  "share_list":"Sahre list",
+  "not_able_share":"Add a list to be able to share it.",
+  "list_code":"Code:",
+  "accept":"OK",
+  "copy_code":"Code copied",
+  "share_list_text":"Download Sharlist and join to my shopping list:\nAndroid: https://goo.gl/6vEiwD\niPhone: https://www.apple.com\nCode: "
 }

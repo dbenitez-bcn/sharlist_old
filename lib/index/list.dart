@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:on_list/index/editProduct.dart';
 import 'package:on_list/utils/dialogs.dart';
 
 class ListProducts extends StatefulWidget {
@@ -41,7 +42,7 @@ class _ListProductsState extends State<ListProducts> {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
-          .collection(widget.list.toLowerCase())
+          .collection(widget.list)
           .orderBy("name")
           .snapshots(),
       builder: (context, snapshot) {
@@ -96,13 +97,16 @@ class _ListProductsState extends State<ListProducts> {
             onTap: () =>
                 record.reference.updateData({'quantity': record.quantity + 1}),
             onLongPress: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => EditProduct(record: record,)));
+  /*
               showDialog<Map<dynamic, String>>(
                   context: context,
                   builder: (BuildContext context) => UpdateRecordDialog(
                         nameValue: record.name,
                         descValue: record.description,
                       )).then<Map<dynamic, String>>(updateRecord);
-
+*/
               //if (record.quantity > 1)record.reference.updateData({'quantity': record.quantity - 1});
             },
             title: Text(record.name),

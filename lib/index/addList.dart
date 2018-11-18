@@ -8,6 +8,7 @@ import 'package:on_list/utils/admob.dart';
 import 'package:path/path.dart' as flutPath;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
+import 'dart:math';
 
 class AddList extends StatelessWidget {
   @override
@@ -16,8 +17,231 @@ class AddList extends StatelessWidget {
       appBar: AppBar(
         title: Text(FlutterI18n.translate(context, "add_list")),
       ),
-      body: AddListBody(),
+      body: bodyAddList(),
     );
+  }
+}
+
+
+class bodyAddList extends StatefulWidget {
+  @override
+  _bodyAddListState createState() => new _bodyAddListState();
+}
+
+class _bodyAddListState extends State<bodyAddList> {
+  final tfName = new TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool conecting = false;
+  String errorLabel;
+
+  void firstStep(bool isCreate) async {
+    if (tfName.text == "") {
+      errorLabel = FlutterI18n.translate(context, "no_name");
+      _formKey.currentState.validate();
+    } else if (tfName.text.contains("/")) {
+      errorLabel = FlutterI18n.translate(context, "no_slash");
+      _formKey.currentState.validate();
+    } else {
+      if (await checkConection()) {
+        setState(() {
+          conecting = true;
+        });
+        createList();
+      } else {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              FlutterI18n.translate(context, "connect_error"),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<bool> checkConection() async {
+    try {
+      final result = await InternetAddress.lookup('firebase.google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      } else
+        return false;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
+
+  void createList() async {
+    DateTime time = DateTime.now();
+    Random rand = Random(1000);
+    String referenceName = tfName.text+"_"+"${time.day}${time.millisecond}${rand.nextInt(1000)}";
+
+    if (await listExist(referenceName)) {
+      createList();
+    } else {
+      await Firestore.instance
+          .collection(referenceName)
+          .document('referenceName')
+          .setData({"referenceName": referenceName}).whenComplete((){
+        insertListDb(referenceName);
+      });
+    }
+  }
+
+  void insertListDb(String referenceName) async {
+    String name = tfName.text;
+    List<int> passValues = [
+      1,
+      2,
+      3,
+      4
+    ];
+    int idList;
+    var databasesPath = await sqflite.getDatabasesPath();
+    String path = flutPath.join(databasesPath, "onlist2.db");
+    sqflite.Database database = await sqflite.openDatabase(path);
+    await database.transaction((txn) async {
+      idList = await txn.rawInsert(
+          'INSERT INTO Lista(name, password, reference) VALUES(?,?,?)', [name, passValues, referenceName]);
+    }).then((data){
+      createProperty(idList);
+    });
+  }
+
+  void createProperty(idList) async {
+    SharedPreferences props = await SharedPreferences.getInstance();
+    await props.setInt("currListId", idList).then((bool success) {
+      Navigator.pop(context);
+    });
+  }
+
+  Future<bool> listExist(String referenceName) async {
+    QuerySnapshot reference =
+    await Firestore.instance.collection(referenceName).getDocuments();
+    if (reference.documents.length > 0)
+      return true;
+    else
+      return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              _nameField(context),
+              //_passwordField(context),
+            ] +
+                (conecting ? _loadingBuilder(context) : _buttons(context))
+                +[bannerSeparator(context)],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _nameField(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: TextFormField(
+        controller: tfName,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+          labelText: FlutterI18n.translate(context, "name"),
+          labelStyle: TextStyle(fontSize: 28.0),
+          border: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(12.0),
+          ),
+        ),
+        validator: (value) {
+          conecting = false;
+          setState(() {});
+          return errorLabel;
+        },
+      ),
+    );
+  }
+
+
+  List<Widget> _buttons(BuildContext context) {
+    return [_buildCreate(context),SizedBox(height: 8.0,), _buildConnect(context)];
+  }
+
+  Widget _buildCreate(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.7,
+      child: RaisedButton(
+        color: Theme.of(context).primaryColor,
+        child: Text(
+          FlutterI18n.translate(context, "create_list"),
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        onPressed: () {
+          firstStep(true);
+        },
+      ),
+    );
+  }
+
+  Widget _buildConnect(BuildContext context) {
+    return InkWell(
+      splashColor: Colors.teal[200],
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.7,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(color: Theme.of(context).primaryColor, width: 2.0),
+            borderRadius: BorderRadius.all(Radius.circular(3.0)),
+          ),
+          child: Center(
+            child: Text(
+              FlutterI18n.translate(context, "already_list"),
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        firstStep(false);
+      },
+    );
+    /*
+    return InkWell(
+      splashColor: Colors.teal[200],
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.7,
+        child: FlatButton(
+          onPressed: null,
+          child: Text(
+            FlutterI18n.translate(context, "conect_list"),
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      ),
+      onTap: () {
+        firstStep(false);
+      },
+    );
+
+    */
+  }
+
+  List<Widget> _loadingBuilder(BuildContext context) {
+    return [
+      Padding(
+        padding: EdgeInsets.all(24.0),
+        child: CircularProgressIndicator(),
+      )
+    ];
   }
 }
 
@@ -106,16 +330,17 @@ class _AddListBodyState extends State<AddListBody> {
       errorLabel = FlutterI18n.translate(context, "list_exist");
       _formKey.currentState.validate();
     } else {
-      List<int> passValues = [
-        valueIconOne,
-        valueIconTwo,
-        valueIconThree,
-        valueIconFour
-      ];
+
+
+      DateTime time = DateTime.now();
+      Random rand = Random(1000);
+      String referenceName = tfName.text+"_"+"${time.day}${time.millisecond}${rand.nextInt(1000)}";
+
+
       await Firestore.instance
-          .collection(tfName.text.toLowerCase())
-          .document('password')
-          .setData({"password": passValues}).whenComplete(insertListDb);
+          .collection(referenceName)
+          .document('referenceName')
+          .setData({"referenceName": referenceName}).whenComplete(insertListDb);
     }
   }
 
@@ -159,7 +384,7 @@ class _AddListBodyState extends State<AddListBody> {
     _formKey.currentState.validate();
     Scaffold.of(context).showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, "some_error"),)));
   }
-  
+
   void insertListDb() async {
     String name = tfName.text;
     List<int> passValues = [
@@ -169,7 +394,7 @@ class _AddListBodyState extends State<AddListBody> {
       valueIconFour
     ];
     var databasesPath = await sqflite.getDatabasesPath();
-    String path = flutPath.join(databasesPath, "onlist.db");
+    String path = flutPath.join(databasesPath, "onlist2.db");
     sqflite.Database database = await sqflite.openDatabase(path);
     await database.transaction((txn) async {
       int id1 = await txn.rawInsert(
@@ -202,7 +427,7 @@ class _AddListBodyState extends State<AddListBody> {
           child: Column(
             children: <Widget>[
                   _nameField(context),
-                  _passwordField(context),
+                  //_passwordField(context),
                 ] +
                 (conecting ? _loadingBuilder(context) : _buttons(context))
             +[bannerSeparator(context)],

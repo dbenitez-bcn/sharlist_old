@@ -1,57 +1,66 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:on_list/index/list.dart';
 import 'package:on_list/utils/admob.dart';
 
-class AddProduct extends StatelessWidget {
-  final String lista;
+class EditProduct extends StatelessWidget {
+  final Record record;
 
-  AddProduct({this.lista});
+  EditProduct({this.record});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(FlutterI18n.translate(context, "add_product")),
+        title: Text(FlutterI18n.translate(context, "edit_product")),
       ),
-      body: BodyAddProduct(
-        lista: lista,
+      body: BodyEditProduct(
+        record: record,
+        cantidad: record.quantity,
+        nameValue: record.name,
+        descValue: record.description,
       ),
     );
   }
 }
 
-class BodyAddProduct extends StatefulWidget {
-  final String lista;
+class BodyEditProduct extends StatefulWidget {
+  final Record record;
+  final int cantidad;
+  final String nameValue;
+  final String descValue;
 
-  BodyAddProduct({this.lista});
+  BodyEditProduct({this.record, this.cantidad, this.nameValue, this.descValue});
 
   @override
-  BodyAddProductState createState() {
-    return new BodyAddProductState();
+  BodyEditProductState createState() {
+    return new BodyEditProductState();
   }
 }
 
-class BodyAddProductState extends State<BodyAddProduct> {
+class BodyEditProductState extends State<BodyEditProduct> {
   final tfName = new TextEditingController();
   final tfDesc = new TextEditingController();
-  int cantidad = 1;
+  int cantidad;
   bool connecting = false;
 
-  void addProduct() {
+  @override
+  void initState() {
+    cantidad=widget.cantidad;
+    tfName.text = widget.nameValue;
+    tfDesc.text = widget.descValue;
+    super.initState();
+  }
+
+  void editProduct() {
     connecting=true;
     setState(() {
 
     });
 
-    Firestore.instance.collection(widget.lista).document().setData({
-      "name": tfName.text,
-      "quantity": cantidad,
-      "description": tfDesc.text == "" ? tfName.text : tfDesc.text,
-      "ts_date":DateTime.now()
-    }).whenComplete(() {
-      Navigator.pop(context);
-    });
+    widget.record.reference.updateData({"name": tfName.text, "description": tfDesc.text, "quantity": cantidad});
+    Navigator.pop(context);
   }
 
   @override
@@ -87,7 +96,7 @@ class BodyAddProductState extends State<BodyAddProduct> {
                   labelText: FlutterI18n.translate(context, "descripcion"),
                   labelStyle: TextStyle(fontSize: 28.0),
                   hintText:
-                      FlutterI18n.translate(context, "descripcion_opcional"),
+                  FlutterI18n.translate(context, "descripcion_opcional"),
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(12.0),
                   ),
@@ -133,16 +142,16 @@ class BodyAddProductState extends State<BodyAddProduct> {
               child: connecting
                   ? CircularProgressIndicator()
                   : RaisedButton(
-                      onPressed: tfName.text == "" ? null : addProduct,
-                      color: Theme.of(context).primaryColor,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          FlutterI18n.translate(context, "add_to_list"),
-                          style: TextStyle(fontSize: 32.0, color: Colors.white),
-                        ),
-                      ),
-                    ),
+                onPressed: tfName.text == "" ? null : editProduct,
+                color: Theme.of(context).primaryColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    FlutterI18n.translate(context, "update_record"),
+                    style: TextStyle(fontSize: 32.0, color: Colors.white),
+                  ),
+                ),
+              ),
             ),
             bannerSeparator(context),
           ],

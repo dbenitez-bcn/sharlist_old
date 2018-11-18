@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:on_list/index/drawer.dart';
 import 'package:on_list/index/list.dart';
+import 'package:on_list/index/lista.dart';
 import 'package:on_list/index/newProduct.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -22,16 +23,32 @@ class IndexState extends State<Index> {
   }
 
   Future<bool> haveLists() async{
-    String path = join(await getDatabasesPath(), "onlist.db");
+    String path = join(await getDatabasesPath(), "onlist2.db");
     Database database = await openDatabase(path);
     List<Map<String, dynamic>> listas =  await database.rawQuery('SELECT * FROM Lista');
     if(listas.length>0)return true;
     else return false;
   }
 
-  Future<String> getCurrList(context) async{
-   SharedPreferences preferences = await  SharedPreferences.getInstance();
-   return preferences.getString("currList") ?? FlutterI18n.translate(context, "appName");
+  Future<Lista> getCurrList(context) async{
+    Lista mainList;
+    Database database;
+    String path;
+
+    path = join(await getDatabasesPath(), "onlist2.db");
+    database = await openDatabase(path);
+
+    int currList = await SharedPreferences.getInstance()
+        .then((data) => data.getInt('currListId'));
+    if (currList != null)
+      mainList = await database.rawQuery('SELECT * FROM Lista WHERE id = ?',
+          [currList]).then((data) => Lista.fromMap(data[0]));
+    else
+      mainList = Lista(
+          name: FlutterI18n.translate(context, "appName"),
+          id: -99,
+          reference: "ashda");
+   return mainList;
   }
 
   @override
@@ -46,7 +63,7 @@ class IndexState extends State<Index> {
             return _loading(context);
           default:
             if (!snapshot.hasError) {
-              return IndexApp(title: snapshot.data[1], haveList: snapshot.data[0],);
+              return IndexApp(mianList: snapshot.data[1], haveList: snapshot.data[0],);
             } else {
               return new Text("Error :(");
             }
@@ -71,18 +88,18 @@ class IndexState extends State<Index> {
 }
 
 class IndexApp extends StatefulWidget {
-  String title;
+  Lista mianList;
   bool haveList;
   bool canShow = true;
-  IndexApp({this.title, this.haveList});
+  IndexApp({this.mianList, this.haveList});
 
   @override
   _IndexAppState createState() => new _IndexAppState();
 }
 
 class _IndexAppState extends State<IndexApp> {
-  void reload(String newTitle, bool newHaveList){
-    widget.title = newTitle;
+  void reload(Lista newMainList, bool newHaveList){
+    widget.mianList = newMainList;
     widget.haveList = newHaveList;
     Future.delayed(Duration(milliseconds:250)).then((value){
       setState(() {});
@@ -101,10 +118,10 @@ class _IndexAppState extends State<IndexApp> {
     return Scaffold(
       drawer: _buildDrawer(context),
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.mianList.name),
       ),
-      body: widget.haveList ? ListProducts(list: widget.title, setCanShow: setCanShow,) : NoLists(),
-      floatingActionButton: widget.haveList && widget.canShow ? AddFab(lista: widget.title,) : null,
+      body: widget.haveList ? ListProducts(list: widget.mianList.reference, setCanShow: setCanShow,) : NoLists(),
+      floatingActionButton: widget.haveList && widget.canShow ? AddFab(lista: widget.mianList.reference,) : null,
       bottomNavigationBar: bannerSeparator(context),
     );
   }

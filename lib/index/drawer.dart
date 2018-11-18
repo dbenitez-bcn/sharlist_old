@@ -3,9 +3,11 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/index/addList.dart';
 import 'package:on_list/icons/icomoon.dart';
 import 'package:on_list/index/help.dart';
+import 'package:on_list/index/lista.dart';
 import 'package:on_list/utils/admob.dart';
 import 'package:on_list/utils/dialogs.dart';
 import 'package:path/path.dart';
+import 'package:share/share.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,30 +24,30 @@ class MyDrawer extends StatelessWidget {
 
   MyDrawer({this.reload});
 
-  void changeCurrList(String newList, bool newHaveList) async {
+  void changeCurrList(Lista newMainList, bool newHaveList) async {
     SharedPreferences props = await SharedPreferences.getInstance();
-    await props.setString("currList", newList).then((bool success) {
-      reload(newList, newHaveList);
+    await props.setInt("currListId", newMainList.id).then((bool success) {
+      reload(newMainList, newHaveList);
     });
   }
 
   Future<bool> loadData(BuildContext context) async {
-    path = join(await getDatabasesPath(), "onlist.db");
+    path = join(await getDatabasesPath(), "onlist2.db");
     database = await openDatabase(path);
     listItems = await database
         .rawQuery('SELECT * FROM Lista ORDER BY name ASC ')
         .then((data) =>
             data.map((list) => _buildListItem(context, list)).toList());
-    String currList = await SharedPreferences.getInstance()
-        .then((data) => data.getString('currList'));
+    int currList = await SharedPreferences.getInstance()
+        .then((data) => data.getInt('currListId'));
     if (currList != null)
-      mainList = await database.rawQuery('SELECT * FROM Lista WHERE name = ?',
+      mainList = await database.rawQuery('SELECT * FROM Lista WHERE id = ?',
           [currList]).then((data) => Lista.fromMap(data[0]));
     else
       mainList = Lista(
           name: FlutterI18n.translate(context, "appName"),
-          password: [0, 0, 0, 0],
-          id: -99);
+          id: -99,
+          reference: "ashda");
     return true;
   }
 
@@ -97,12 +99,56 @@ class MyDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _buildNameDrawer(context),
-            PasswordIcons(
-              pass: mainList.password,
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: _buildShare(context),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildShare(BuildContext context) {
+
+    void shareCallback(String decision){
+      final RenderBox box = context.findRenderObject();
+      final String text = FlutterI18n.translate(context, "share_list_text")+mainList.reference;
+      if(decision=="share")
+      Share.share(text,
+          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    }
+
+    void shareList() {
+      print(mainList.id);
+      if (mainList.id > 0) {
+        showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => ShareListDialog(
+                  code: mainList.reference,
+                )).then(shareCallback);
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => NotAbleShareDialog());
+      }
+    }
+
+    return FlatButton(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(
+            Icons.share,
+            color: Colors.white,
+          ),
+          Text(
+            FlutterI18n.translate(context, "share_this_list"),
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+      onPressed: shareList,
     );
   }
 
@@ -166,17 +212,22 @@ class MyDrawer extends StatelessWidget {
           await database.rawQuery('SELECT * FROM Lista');
       if (listas.length > 0) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
-        if (preferences.getString('currList') == lista.name) {
-          changeCurrList(listas[0]['name'], true);
+        if (preferences.getInt('currListId') == lista.id) {
+          changeCurrList(Lista.fromMap(listas[0]), true);
         } else {
-          changeCurrList(preferences.getString('currList'), true);
+          changeCurrList(mainList, true);
         }
         Navigator.of(context).pop();
       } else {
         await SharedPreferences.getInstance().then((preferences) {
-          preferences.setString("currList", null);
+          preferences.setInt("currListId", null);
           Navigator.of(context).pop();
-          reload(FlutterI18n.translate(context, "appName"), false);
+          reload(
+              Lista(
+                  name: FlutterI18n.translate(context, "appName"),
+                  id: -99,
+                  reference: "ashda"),
+              false);
         });
       }
     }
@@ -189,7 +240,7 @@ class MyDrawer extends StatelessWidget {
       ),
       onTap: () {
         Navigator.of(context).pop();
-        changeCurrList(lista.name, true);
+        changeCurrList(lista, true);
       },
       onLongPress: () {
         showDialog<String>(
@@ -213,151 +264,6 @@ class MyDrawer extends StatelessWidget {
               strokeWidth: 6.0,
             )),
       ],
-    );
-  }
-}
-
-class Lista {
-  final String name;
-  final List<int> password;
-  final int id;
-
-  Lista.fromMap(Map<String, dynamic> map)
-      : assert(map['name'] != null),
-        assert(map['password'] != null),
-        assert(map['id'] != null),
-        name = map['name'],
-        password = map['password'],
-        id = map['id'];
-
-  Lista({this.name, this.password, this.id});
-
-  @override
-  String toString() => "Lista: $name($id) - $password";
-}
-
-class PasswordIcons extends StatelessWidget {
-  final List<int> pass;
-
-  PasswordIcons({this.pass});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          _buildIcon(context, pass[0]),
-          _buildIcon(context, pass[1]),
-          _buildIcon(context, pass[2]),
-          _buildIcon(context, pass[3]),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIcon(BuildContext context, int value) {
-    if (value == 1) {
-      return _buildMeat(context);
-    } else if (value == 2) {
-      return _buildVegetable(context);
-    } else if (value == 3) {
-      return _buildMilk(context);
-    } else if (value == 4) {
-      return _buildFish(context);
-    } else if (value == 0) {
-      return _buildNone(context);
-    }
-  }
-
-  Widget _buildMeat(BuildContext context) {
-    return Container(
-      width: DRAWER_WIDTH * 0.20,
-      height: DRAWER_WIDTH * 0.20,
-      alignment: AlignmentDirectional.center,
-      decoration: BoxDecoration(
-        color: Colors.red[100],
-        border: new Border.all(color: Colors.red, width: 2.0),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        Icomoon.meat,
-        color: Colors.red,
-        size: DRAWER_WIDTH * 0.13,
-      ),
-    );
-  }
-
-  Widget _buildVegetable(BuildContext context) {
-    return Container(
-      width: DRAWER_WIDTH * 0.20,
-      height: DRAWER_WIDTH * 0.20,
-      alignment: AlignmentDirectional.center,
-      decoration: BoxDecoration(
-        color: Colors.lightGreenAccent[100],
-        border: new Border.all(color: Colors.lightGreenAccent[700], width: 2.0),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        Icomoon.vegetable,
-        color: Colors.lightGreenAccent[700],
-        size: DRAWER_WIDTH * 0.13,
-      ),
-    );
-  }
-
-  Widget _buildMilk(BuildContext context) {
-    return Container(
-      width: DRAWER_WIDTH * 0.20,
-      height: DRAWER_WIDTH * 0.20,
-      alignment: AlignmentDirectional.center,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: new Border.all(color: Colors.black, width: 2.0),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        Icomoon.milk,
-        color: Colors.black,
-        size: DRAWER_WIDTH * 0.13,
-      ),
-    );
-  }
-
-  Widget _buildFish(BuildContext context) {
-    return Container(
-      width: DRAWER_WIDTH * 0.20,
-      height: DRAWER_WIDTH * 0.20,
-      alignment: AlignmentDirectional.center,
-      decoration: BoxDecoration(
-        color: Colors.lightBlue[100],
-        border: new Border.all(color: Colors.lightBlue, width: 2.0),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        Icomoon.fish,
-        color: Colors.lightBlue,
-        size: DRAWER_WIDTH * 0.13,
-      ),
-    );
-  }
-
-  Widget _buildNone(BuildContext context) {
-    return Container(
-      width: DRAWER_WIDTH * 0.20,
-      height: DRAWER_WIDTH * 0.20,
-      alignment: AlignmentDirectional.center,
-      decoration: BoxDecoration(
-        color: Colors.green[100],
-        border: new Border.all(color: Colors.green[700], width: 2.0),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        Icons.android,
-        color: Colors.green[100],
-        size: DRAWER_WIDTH * 0.13,
-      ),
     );
   }
 }
