@@ -26,7 +26,7 @@ class MyAppState extends State<MyApp> {
     Database database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
           await db.execute(
-              "CREATE TABLE Lista (id INTEGER PRIMARY KEY, name TEXT, password BLOB, reference TEXT)");
+              "CREATE TABLE Lista (id INTEGER PRIMARY KEY, name TEXT, reference TEXT)");
         });
   }
 

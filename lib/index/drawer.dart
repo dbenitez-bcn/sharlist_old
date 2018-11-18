@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:on_list/index/addList.dart';
-import 'package:on_list/icons/icomoon.dart';
 import 'package:on_list/index/help.dart';
 import 'package:on_list/index/lista.dart';
 import 'package:on_list/utils/admob.dart';
@@ -122,11 +121,11 @@ class MyDrawer extends StatelessWidget {
     void shareList() {
       print(mainList.id);
       if (mainList.id > 0) {
-        showDialog<String>(
+        showDialog(
             context: context,
             builder: (BuildContext context) => ShareListDialog(
                   code: mainList.reference,
-                )).then(shareCallback);
+                ));
       } else {
         showDialog(
             context: context,

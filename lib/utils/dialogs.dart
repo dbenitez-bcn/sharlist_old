@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-
+import 'package:share/share.dart';
 class DeleteListDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -64,17 +64,33 @@ class ShareListDialogState extends State<ShareListDialog> {
       Clipboard.setData(new ClipboardData(text: widget.code));
     });
   }
+  void shareCallback(){
+    final RenderBox box = context.findRenderObject();
+    final String text = FlutterI18n.translate(context, "share_list_text")+widget.code;
+      Share.share(text,
+          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    goBack();
+  }
+
+  void goBack(){
+    Navigator.pop(context);
+  }
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(FlutterI18n.translate(context, "share_list")),
       content: _buildContent(context),
-      actions: <Widget>[
+      actions: <Widget>[FlatButton(
+        child: Text(
+          FlutterI18n.translate(context, "cancel"),
+        ),
+        onPressed: goBack,
+      ),
         FlatButton(
           child: Text(
             FlutterI18n.translate(context, "share"),
           ),
-          onPressed: () => Navigator.pop(context,"share"),
+          onPressed: shareCallback,
         ),
       ],
     );
@@ -211,22 +227,6 @@ class UpdateRecordDialog extends StatelessWidget {
           ),
         )
       ],
-      /*
-      actions: <Widget>[
-        FlatButton(
-          child: Text(
-            FlutterI18n.translate(context, "cancel"),
-          ),
-          onPressed: () => Navigator.pop(context, "cancel"),
-        ),
-        FlatButton(
-          child: Text(
-            FlutterI18n.translate(context, "ok"),
-          ),
-          onPressed: () => Navigator.pop(context, "ok"),
-        ),
-      ],
-    */
     );
   }
 }

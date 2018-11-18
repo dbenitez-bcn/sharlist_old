@@ -5,6 +5,7 @@ import 'dart:io' show Platform;
 MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
   keywords: <String>['shop', 'supermarket', 'shopping list', 'family', 'products', 'lists', 'e-commerce'],
   designedForFamilies: true,
+  testDevices: ["998B4D8DB36FBE01CD594FE7C555A025"]
 );
 
 String getAppId(){
