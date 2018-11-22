@@ -17,7 +17,8 @@ class HelpWindow extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    const String androidLink= "https://goo.gl/6vEiwD";
+    const String androidLink = "https://goo.gl/6vEiwD";
+    const String iosLink = "https://goo.gl/CqBLsf";
     void openUrl(String url) async {
       if (await canLaunch(url)) {
         await launch(url);
@@ -28,7 +29,7 @@ class HelpWindow extends StatelessWidget {
 
     void toRate() {
       if (Platform.isIOS) {
-        const url = 'https://www.apple.com';
+        const url = iosLink;
         openUrl(url);
       } else {
         const url = androidLink;

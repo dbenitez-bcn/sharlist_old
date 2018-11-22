@@ -183,7 +183,7 @@ class MyDrawer extends StatelessWidget {
     Widget help = InkWell(
       borderRadius: BorderRadius.all(Radius.circular(20.0)),
       child: ListTile(
-        leading: Icon(Icons.info_outline),
+        leading: Icon(Icons.help_outline),
         title: Text(FlutterI18n.translate(context, "help")),
       ),
       onTap: () => openWindow(HelpWindow()),
