@@ -106,27 +106,30 @@ class ShareListDialogState extends State<ShareListDialog> {
         ),
         Padding(
           padding: const EdgeInsets.all(2.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Text(
-                widget.code,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              InkWell(
-                splashColor: Theme.of(context).splashColor,
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.content_copy,
-                    color: Colors.grey,
-                  ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text(
+                  widget.code,
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                onTap: copyCode,
-              ),
-            ],
+                InkWell(
+                  splashColor: Theme.of(context).splashColor,
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.content_copy,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  onTap: copyCode,
+                ),
+              ],
+            ),
           ),
         ),
         Container(

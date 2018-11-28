@@ -16,7 +16,8 @@ class _TutorialState extends State<Tutorial> {
     "tutorial_one",
     "tutorial_two",
     "tutorial_three",
-    "tutorial_four"
+    "tutorial_four",
+    "tutorial_five"
   ];
 
   void nextPageModel() {
@@ -34,7 +35,7 @@ class _TutorialState extends State<Tutorial> {
 
   void loadPoints() {
     points = [];
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 5; i++) {
       if (i != currentPage)
         points.add(_buildPointOff(context));
       else
@@ -80,6 +81,7 @@ class _TutorialState extends State<Tutorial> {
             _buildPage(context, "assets/images/screen2.png"),
             _buildPage(context, "assets/images/screen3.png"),
             _buildPage(context, "assets/images/screen4.png"),
+            _buildPage(context, "assets/images/screen5.png"),
           ],
         ),
       ),
@@ -122,7 +124,7 @@ class _TutorialState extends State<Tutorial> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                currentPage < 3 ? twoButtons(context) : empezarApp(context),
+                currentPage < 4 ? twoButtons(context) : empezarApp(context),
                 _buildPoints(context),
               ],
             )
