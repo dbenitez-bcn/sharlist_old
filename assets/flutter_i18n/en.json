@@ -25,6 +25,7 @@
   "no_slash":"The name can not contain '/'",
   "no_underscore":"To use a code tab on: ",
   "list_exist":"List already exists",
+  "list_in_db":"You are already using this list",
   "list_no_exist":"The list was not found",
   "bad_pass":"Incorrect password",
   "no_lists":"You don't have lists",

@@ -25,6 +25,7 @@
   "no_slash":"El nombre no puede contener '/'",
   "no_underscore":"Para utilitzar un código pulsa: ",
   "list_exist":"La lista ya axiste",
+  "list_in_db":"Ya estás usando esta lista",
   "list_no_exist":"No se encontró la lista",
   "bad_pass":"Contraseña incorrecta",
   "no_lists":"No tienes listas",

@@ -25,6 +25,7 @@
   "no_slash":"El nom no pot contenir '/'",
   "no_underscore":"Per utilitzar un codi prem a: ",
   "list_exist":"La llista ja existeix",
+  "list_in_db":"Ja estàs fent servir aquesta llista",
   "list_no_exist":"No s'ha trobat la llista",
   "bad_pass":"Contrasenya incorrecte",
   "no_lists":"No tens llistes",

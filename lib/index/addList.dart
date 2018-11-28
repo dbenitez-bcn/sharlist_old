@@ -21,7 +21,6 @@ class AddList extends StatelessWidget {
   }
 }
 
-
 class bodyAddList extends StatefulWidget {
   @override
   _bodyAddListState createState() => new _bodyAddListState();
@@ -34,13 +33,11 @@ class _bodyAddListState extends State<bodyAddList> {
   String errorLabel;
 
   void firstStep() async {
-    if (tfName.text == "") {
-      errorLabel = FlutterI18n.translate(context, "no_name");
-      _formKey.currentState.validate();
-    } else if (tfName.text.contains("/")) {
-      errorLabel = FlutterI18n.translate(context, "no_slash");
-      _formKey.currentState.validate();
-    } else {
+    if (tfName.text == "")
+      someError("no_name");
+    else if (tfName.text.contains("/"))
+      someError("no_slash");
+    else {
       if (await checkConection()) {
         setState(() {
           conecting = true;
@@ -72,17 +69,20 @@ class _bodyAddListState extends State<bodyAddList> {
 
   void connectList() async {
     if (await listExist(tfName.text)) {
-      insertListDb(tfName.text, tfName.text.split("_")[0]);
-    } else {
-      errorLabel = FlutterI18n.translate(context, "list_no_exist");
-      _formKey.currentState.validate();
-    }
+      if (await listInDb(tfName.text))
+        someError("list_in_db");
+      else
+        insertListDb(tfName.text, tfName.text.split("_")[0]);
+    } else
+      someError("list_no_exist");
   }
 
   void createList() async {
     DateTime time = DateTime.now();
     Random rand = Random(1000);
-    String referenceName = tfName.text+"_"+"${time.day}${time.millisecond}${rand.nextInt(1000)}";
+    String referenceName = tfName.text +
+        "_" +
+        "${time.day}${time.millisecond}${rand.nextInt(1000)}";
 
     if (await listExist(referenceName)) {
       createList();
@@ -90,7 +90,7 @@ class _bodyAddListState extends State<bodyAddList> {
       await Firestore.instance
           .collection(referenceName)
           .document('referenceName')
-          .setData({"referenceName": referenceName}).whenComplete((){
+          .setData({"referenceName": referenceName}).whenComplete(() {
         insertListDb(referenceName, tfName.text);
       });
     }
@@ -103,10 +103,20 @@ class _bodyAddListState extends State<bodyAddList> {
     sqflite.Database database = await sqflite.openDatabase(path);
     await database.transaction((txn) async {
       idList = await txn.rawInsert(
-          'INSERT INTO Lista(name, reference) VALUES(?,?)', [listName, referenceName]);
-    }).then((data){
+          'INSERT INTO Lista(name, reference) VALUES(?,?)',
+          [listName, referenceName]);
+    }).then((data) {
       createProperty(idList);
     });
+  }
+
+  Future<bool> listInDb(String listName) async {
+    var databasesPath = await sqflite.getDatabasesPath();
+    String path = flutPath.join(databasesPath, "onlist2.db");
+    sqflite.Database database = await sqflite.openDatabase(path);
+    List<Map<String, dynamic>> lista = await database
+        .rawQuery("SELECT * FROM Lista WHERE reference = ?", [listName]);
+    return lista.length > 0 ? true : false;
   }
 
   void createProperty(idList) async {
@@ -118,11 +128,16 @@ class _bodyAddListState extends State<bodyAddList> {
 
   Future<bool> listExist(String referenceName) async {
     QuerySnapshot reference =
-    await Firestore.instance.collection(referenceName).getDocuments();
+        await Firestore.instance.collection(referenceName).getDocuments();
     if (reference.documents.length > 0)
       return true;
     else
       return false;
+  }
+
+  void someError(String text) {
+    errorLabel = FlutterI18n.translate(context, text);
+    _formKey.currentState.validate();
   }
 
   @override
@@ -133,10 +148,12 @@ class _bodyAddListState extends State<bodyAddList> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-              _nameField(context),
-            ] +
-                (conecting ? _loadingBuilder(context) : [_buildCreate(context)])
-                +[bannerSeparator(context)],
+                  _nameField(context),
+                ] +
+                (conecting
+                    ? _loadingBuilder(context)
+                    : [_buildCreate(context)]) +
+                [bannerSeparator(context)],
           ),
         ),
       ),
