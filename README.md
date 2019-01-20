@@ -1,6 +1,11 @@
 # on_list
 
 Dinamic shopping list for families.
+Android: https://goo.gl/6vEiwD
+
+iPhone: https://goo.gl/CqBLsf
+
+Web: https://goo.gl/rd67qt
 
 ## Getting Started
 
