@@ -1,7 +1,9 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:share/share.dart';
+
 class DeleteListDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -57,40 +59,70 @@ class ShareListDialog extends StatefulWidget {
 
 class ShareListDialogState extends State<ShareListDialog> {
   String helpStr = "";
+  DynamicLinkParameters parameters;
+  ShortDynamicLink shortDynamicLink;
 
-  void copyCode(){
+  void copyCode() {
     setState(() {
       helpStr = FlutterI18n.translate(context, "copy_code");
       Clipboard.setData(new ClipboardData(text: widget.code));
     });
   }
-  void shareCallback(){
+
+  void buildDynamicLinkLongUrl(){
+    parameters = DynamicLinkParameters(
+      domain: 'sharlist.page.link',
+      link: Uri.parse('https://on-list.firebaseapp.com/index.html?list='+widget.code),
+      androidParameters: AndroidParameters(packageName: 'com.logicgear.onlist', minimumVersion: 9),
+      iosParameters: IosParameters(bundleId: 'com.logicgear.onList', appStoreId: '1442700316', minimumVersion: '1.0.4'),
+      socialMetaTagParameters: SocialMetaTagParameters(
+        title: 'Sharlist',
+        description: FlutterI18n.translate(context, "share_description_media"),
+        imageUrl: Uri.parse('https://on-list.firebaseapp.com/assets/images/title_web.png'),
+      ),
+    );
+
+    buildShortUrl();
+  }
+
+  void buildShortUrl() async{
+    shortDynamicLink = await parameters.buildShortLink();
+
+    shareCallback();
+  }
+
+
+  void shareCallback() {
     final RenderBox box = context.findRenderObject();
-    final String text = FlutterI18n.translate(context, "share_list_text")+widget.code;
-      Share.share(text,
-          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    final String text =
+        FlutterI18n.translate(context, "share_list_text") + shortDynamicLink.shortUrl.toString();
+    Share.share(text,
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+
     goBack();
   }
 
-  void goBack(){
+  void goBack() {
     Navigator.pop(context);
   }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(FlutterI18n.translate(context, "share_list")),
       content: _buildContent(context),
-      actions: <Widget>[FlatButton(
-        child: Text(
-          FlutterI18n.translate(context, "cancel"),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            FlutterI18n.translate(context, "cancel"),
+          ),
+          onPressed: goBack,
         ),
-        onPressed: goBack,
-      ),
         FlatButton(
           child: Text(
             FlutterI18n.translate(context, "share"),
           ),
-          onPressed: shareCallback,
+          onPressed: buildDynamicLinkLongUrl,
         ),
       ],
     );

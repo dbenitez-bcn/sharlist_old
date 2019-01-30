@@ -51,7 +51,7 @@
   "answare_four":"Puedes encontrar la contraseña de una lista a la que estés conectad@ desde el menú principal. Allí verás la lista actual a la que estás conectad@ y su contraseña.",
   "share":"Compartir",
   "share_text":"Comparteix Sharlist amb els teus contactes",
-  "shareApp":"Que fàcil es organizar-se amb Sharlist! Descarga't l'app ara, crea tantes listes com necesitis i comparteix-la amb qui tu vulguis.\nAndroid: https://goo.gl/6vEiwD\niPhone: https://goo.gl/CqBLsf",
+  "shareApp":"Que fàcil es organizar-se amb Sharlist! Descarga't l'app ara, crea tantes listes com necesitis i comparteix-la amb qui tu vulguis.\nhttps://sharlist.page.link/jdF1",
   "tutorial_one":"Un ràpid tutorial...\nClica el botó o llisca el dit.",
   "tutorial_two":"Afegeix llistes desde el menu.",
   "tutorial_three":"Afegeix productes amb el botó.",
@@ -66,5 +66,6 @@
   "list_code":"Codi:",
   "accept":"D'acord",
   "copy_code":"Codi copiat",
-  "share_list_text":"Descarrega't Sharlist i uneix-te a la meva lista de la compra:\nAndroid: https://goo.gl/6vEiwD\niPhone: https://goo.gl/CqBLsf\nCodi: "
+  "share_list_text":"¡Uneix-te a la meva lista de la compra!\n",
+  "share_description_media":"¡Sharlist! La manera més fàcil de fer la compra."
 }
