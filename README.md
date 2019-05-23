@@ -1,4 +1,4 @@
-# on_list
+# Sharlist
 
 Dinamic shopping list for families.
 Android: https://goo.gl/6vEiwD
