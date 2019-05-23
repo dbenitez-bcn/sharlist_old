@@ -66,6 +66,7 @@
   "list_code":"Code:",
   "accept":"OK",
   "copy_code":"Code copied",
-  "share_list_text":"Join to my shopping list!\n",
-  "share_description_media":"Sharlist! The easiest way to make the purchase."
+  "share_list_text":"Join to my list",
+  "share_description_media":"Sharlist! The easiest way to make the purchase.",
+  "undo":"Undo"
 }

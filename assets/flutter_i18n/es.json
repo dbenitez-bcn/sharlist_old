@@ -66,6 +66,7 @@
   "list_code":"Código:",
   "accept":"Aceptar",
   "copy_code":"Código copiado",
-  "share_list_text":"Únete a mi lista de la compra!\n",
-  "share_description_media":"Sharlist! La manera mas fácil de hacer la compra."
+  "share_list_text":"Únete a mi lista",
+  "share_description_media":"Sharlist! La manera mas fácil de hacer la compra.",
+  "undo":"Deshacer"
 }

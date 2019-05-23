@@ -124,7 +124,7 @@ class MyDrawer extends StatelessWidget {
         showDialog(
             context: context,
             builder: (BuildContext context) => ShareListDialog(
-                  code: mainList.reference,
+                  list: mainList,
                 ));
       } else {
         showDialog(

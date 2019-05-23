@@ -2,6 +2,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:on_list/index/lista.dart';
 import 'package:share/share.dart';
 
 class DeleteListDialog extends StatelessWidget {
@@ -47,9 +48,9 @@ class NotAbleShareDialog extends StatelessWidget {
 }
 
 class ShareListDialog extends StatefulWidget {
-  String code;
+  Lista list;
 
-  ShareListDialog({this.code});
+  ShareListDialog({this.list});
 
   @override
   ShareListDialogState createState() {
@@ -65,14 +66,14 @@ class ShareListDialogState extends State<ShareListDialog> {
   void copyCode() {
     setState(() {
       helpStr = FlutterI18n.translate(context, "copy_code");
-      Clipboard.setData(new ClipboardData(text: widget.code));
+      Clipboard.setData(new ClipboardData(text: widget.list.reference));
     });
   }
 
   void buildDynamicLinkLongUrl(){
     parameters = DynamicLinkParameters(
       domain: 'sharlist.page.link',
-      link: Uri.parse('https://on-list.firebaseapp.com/index.html?list='+widget.code),
+      link: Uri.parse('https://on-list.firebaseapp.com/index.html?list='+widget.list.reference),
       androidParameters: AndroidParameters(packageName: 'com.logicgear.onlist', minimumVersion: 9),
       iosParameters: IosParameters(bundleId: 'com.logicgear.onList', appStoreId: '1442700316', minimumVersion: '1.0.4'),
       socialMetaTagParameters: SocialMetaTagParameters(
@@ -95,7 +96,7 @@ class ShareListDialogState extends State<ShareListDialog> {
   void shareCallback() {
     final RenderBox box = context.findRenderObject();
     final String text =
-        FlutterI18n.translate(context, "share_list_text") + shortDynamicLink.shortUrl.toString();
+        FlutterI18n.translate(context, "share_list_text") +" ${widget.list.name}\n" + shortDynamicLink.shortUrl.toString();
     Share.share(text,
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
 
@@ -145,7 +146,7 @@ class ShareListDialogState extends State<ShareListDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Text(
-                  widget.code,
+                  widget.list.reference,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 InkWell(

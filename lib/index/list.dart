@@ -83,8 +83,22 @@ class _ListProductsState extends State<ListProducts> {
       onDismissed: (direction) {
         if (record.reference.delete() != null)
           Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(record.name.toUpperCase() +
-                  " ${FlutterI18n.translate(context, "bought")}!")));
+            content: Text(record.name.toUpperCase() +
+                " ${FlutterI18n.translate(context, "bought")}!"),
+            action: SnackBarAction(
+                label: FlutterI18n.translate(context, "undo"),
+                onPressed: () {
+                  Firestore.instance
+                      .collection(widget.list)
+                      .document()
+                      .setData({
+                    "name": record.name,
+                    "quantity": record.quantity,
+                    "description": record.description,
+                    "ts_date": record.ts_date
+                  });
+                }),
+          ));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -98,16 +112,11 @@ class _ListProductsState extends State<ListProducts> {
                 record.reference.updateData({'quantity': record.quantity + 1}),
             onLongPress: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => EditProduct(record: record,)));
-  /*
-              showDialog<Map<dynamic, String>>(
-                  context: context,
-                  builder: (BuildContext context) => UpdateRecordDialog(
-                        nameValue: record.name,
-                        descValue: record.description,
-                      )).then<Map<dynamic, String>>(updateRecord);
-*/
-              //if (record.quantity > 1)record.reference.updateData({'quantity': record.quantity - 1});
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditProduct(
+                            record: record,
+                          )));
             },
             title: Text(record.name),
             subtitle: Text(record.description),
